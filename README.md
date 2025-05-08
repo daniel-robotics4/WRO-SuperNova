@@ -4,13 +4,13 @@ Our project consists of creating an automated land vehicle capable of navigating
 the code have different rutines depending on :
 The code has different routines for:
 
-Movement execution, using a servo motor that can position itself anywhere within its range of motion and from there execute a direction.
+The core of the system is based on the Arduino Mega 2560 microcontroller, which offers ample input/output pins and processing power to handle multiple sensors and actuators simultaneously. The vehicle integrates a DC motor equipped with an optical encoder to provide precise feedback on wheel rotation, enabling closed-loop speed and distance control. Three ultrasonic sensors are strategically mounted to provide comprehensive environmental awareness by measuring distances to obstacles in front and on both sides of the vehicle. A motor driver shield manages power delivery and control signals to the motor, while a servomotor is used to actuate steering
 
-Obstacle detection, through ultrasonic sensors that determine the proximity of obstacles and send a signal to the board, which will activate the color sensor.
+## Electromechanical Components
 
-Color identification using a color sensor. Depending on the identified color, the vehicle will respond as follows: if it is red, it will go to the right; if green, to the left; if black, it will recognize it as a wall and avoid it by turning clockwise or counterclockwise according to the challenge requirements.
+### DC motor whith encoder
+The propulsion system relies on a brushed DC motor paired with an optical quadrature encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (channels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
 
-Stopping upon detecting the color magenta and parking in the designated area for that purpose.
 
 
 
