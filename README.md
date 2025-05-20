@@ -28,7 +28,7 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 **Motor driver shield (L293d)**
 is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
 
-# Rutines #
+# Modules #
 
 
 
