@@ -19,6 +19,7 @@ The core of the system is based on the Arduino Mega 2560 microcontroller, which 
 |  |
 |  |
 
+
 The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (channels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
 
 **Servo Motor 9g:**
@@ -42,6 +43,7 @@ A servomotor is integrated into the system to control steering. The servo receiv
 |  |
 |  |
 |  |
+![mtr cntrlr](https://github.com/user-attachments/assets/fd5479d2-4d84-43ed-bd1c-b6e060d37bcf)
 
 is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
 The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
@@ -69,18 +71,21 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 | Frequency: 40 kHz|
 | Input voltage: 5V  |
 | Operating Current: 15 mA |
+![Ultrasonic_Sensor](https://github.com/user-attachments/assets/9172b512-f920-4b1e-98cb-fac84d70ee8a)
+
 
 It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn
 
 **Pixy Cam v2:**
 | Specifications: |
 | ------------- |
+| Processor: NXP LPC4330 |
 |  |
 |  |
 |  |
 |  |
 |  |
-|  |
+![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour
 
