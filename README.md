@@ -50,12 +50,13 @@ The motor driver shield is designed to handle the power requirements of the DC m
 **Arduino mega 2560:**
 | Specifications: |
 | ------------- |
-| Microcontroller: ATmega2560 |
+| Microcontroller: ATmega2560 | 
 | Flash memory: 256 KB |
 | SRAM: 8 KB |
 | Frequency: 16 MHz |
 | Pins: 56 |
 | Input voltage: 5V  |
+ ![mega 2](https://github.com/user-attachments/assets/795966a0-d3ef-4f3b-9485-fe8bbaa3a449)
  
 Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
 
