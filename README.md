@@ -7,30 +7,91 @@ The core of the system is based on the Arduino Mega 2560 microcontroller, which 
 
 ## Electronic Components
 
-**DC motor with encoder:**
-The propulsion system relies on a brushed DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (channels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
+### Mobility Mangement
 
-**Arduino mega:**
-Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
+**Motor DC 12v with encoder:**
+| Specifications: |
+| ------------- |
+|  |
+|  |
+|  |
+|  |
+|  |
+|  |
 
-**servomotor:**
+The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (channels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
+
+**Servo Motor 9g:**
+| Specifications: |
+| ------------- |
+|  |
+|  |
+|  |
+|  |
+|  |
+|  |
+
 A servomotor is integrated into the system to control steering. The servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. The servo’s position is controlled programmatically to perform smooth and accurate movements.
 
-**ultrasonic sensors (hc-sr04):**
-It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn
+**Motor driver shield (L293):**
+| Specifications: |
+| ------------- |
+|  |
+|  |
+|  |
+|  |
+|  |
+|  |
 
-**Motor driver shield:**
+is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
 The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
 
-**Camera:**
+### Power and Sense Management
+**Arduino mega 2560:**
+| Specifications: |
+| ------------- |
+| Microcontroller: ATmega2560 |
+| Flash memory: 256 KB |
+| SRAM: 8 KB |
+| Frequency: 16 MHz |
+| Pins: 56 |
+| Input voltage: 5V  |
+ 
+Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
+
+**ultrasonic sensors (hc-sr04):**
+| Specifications: |
+| ------------- |
+| Accuracy: 3cm |
+| Measurement Range: 2cm to 400cm |
+| Resolution: 0.3 cm |
+| Frequency: 40 kHz|
+| Input voltage: 5V  |
+| Operating Current: 15 mA |
+
+It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn
+
+**Pixy Cam v2:**
+| Specifications: |
+| ------------- |
+|  |
+|  |
+|  |
+|  |
+|  |
+|  |
+
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour
 
-**Motor driver shield (L293d)**
-is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
-
-# Modules #
-
-
+**Battery:**
+| Specifications: |
+| ------------- |
+|  |
+|  |
+|  |
+|  |
+|  |
+|  |
 
 
 
