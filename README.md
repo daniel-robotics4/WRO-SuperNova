@@ -37,12 +37,9 @@ A servomotor is integrated into the system to control steering. The servo receiv
 **Motor driver shield (L293):**
 | Specifications: |
 | ------------- |
-|  |
-|  |
-|  |
-|  |
-|  |
-|  |
+| Power supply voltage: 4.5 to 25V  |
+| Output current: 1.2A (peak) |
+| Can handle: 4 DC motors or 2 stepper motors and 2 servo motors |
 ![mtr cntrlr](https://github.com/user-attachments/assets/fd5479d2-4d84-43ed-bd1c-b6e060d37bcf)
 
 is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
@@ -80,11 +77,13 @@ It is a sensor that uses ultrasonic sounds to detect the bounce time of sound fr
 | Specifications: |
 | ------------- |
 | Processor: NXP LPC4330 |
-|  |
-|  |
-|  |
-|  |
-|  |
+| Image sensor: Aptina MT9M114 |
+| Resolution:1296×976  |
+| Lens field-of-view: 80° horizontal, 40° vertical |
+| Power consumption: 140mA |
+| RAM: 264K bytes |
+| Flash Memory: 2M bytes |
+| Power input: 5V |
 ![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour
@@ -92,12 +91,12 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 **Battery:**
 | Specifications: |
 | ------------- |
-|  |
-|  |
-|  |
-|  |
-|  |
-|  |
+| Capacity: 1800 mAh |
+| Voltage: 3.6 V o 3.7 V |
+| Discharge rate:  0.25C |
+| Weight: 45 g (one battery) |
+| Size: 18 mm diameter, 65 mm length |
+
 
 
 
