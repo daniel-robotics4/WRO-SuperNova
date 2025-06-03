@@ -25,12 +25,10 @@ The propulsion system relies on a DC motor paired with an encoder. The motor pro
 **Servo Motor 9g:**
 | Specifications: |
 | ------------- |
-|  |
-|  |
-|  |
-|  |
-|  |
-|  |
+| voltage: 4.8-6V |
+| torque: 1.6-1.8 kg/cm |
+| Rotation: 180° ± 10°  |
+![servo](https://github.com/user-attachments/assets/616dea0b-ce80-44be-adf4-3006b407275c)
 
 A servomotor is integrated into the system to control steering. The servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. The servo’s position is controlled programmatically to perform smooth and accurate movements.
 
@@ -91,11 +89,14 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 **Battery:**
 | Specifications: |
 | ------------- |
-| Capacity: 1800 mAh |
+| Capacity: 9900 mAh |
 | Voltage: 3.6 V o 3.7 V |
 | Discharge rate:  0.25C |
 | Weight: 45 g (one battery) |
 | Size: 18 mm diameter, 65 mm length |
+![gtf](https://github.com/user-attachments/assets/c771bb60-3599-4566-bee3-3cf6875fe9cd)
+
+This are the batteries tha we are gonna use in the vehicle that are li-ion batteries
 
 
 
