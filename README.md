@@ -36,8 +36,8 @@ The propulsion system relies on a DC motor paired with an encoder. The motor pro
 **Servo Motor 9g:**
 | Specifications: |
 | ------------- |
-| voltage: 4.8-6V |
-| torque: 1.6-1.8 kg/cm |
+| Voltage: 4.8-6V |
+| Torque: 1.6-1.8 kg/cm |
 | Rotation: 180° ± 10°  |
 ![servo](https://github.com/user-attachments/assets/616dea0b-ce80-44be-adf4-3006b407275c)
 
