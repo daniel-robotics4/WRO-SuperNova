@@ -13,7 +13,7 @@ This challenge emphasizes all aspects of the engineering process, including:
 - Obstacle Handling: Strategizing to detect and navigate traffic signs (red and green markers) within specified rules.
 - Documentation: Showcasing engineering progress, design decisions, and open-source collaboration through a public GitHub repository.
 
-## Photos of (name of the robot) 
+## Photos of DELTA
 
 | Front view | Back view | Left view | Right view | Top view | Bottom view |
 | ------------- | ------------- |------------- | ------------- |------------- | ------------- |
@@ -86,7 +86,21 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 ![Ultrasonic_Sensor](https://github.com/user-attachments/assets/9172b512-f920-4b1e-98cb-fac84d70ee8a)
 
 
-It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn
+It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
+
+
+**Battery:**
+| Specifications: |
+| ------------- |
+| Capacity: 9900 mAh |
+| Voltage: 3.6 V o 3.7 V |
+| Discharge rate:  0.25C |
+| Weight: 45 g (one battery) |
+| Size: 18 mm diameter, 65 mm length |
+![gtf](https://github.com/user-attachments/assets/c771bb60-3599-4566-bee3-3cf6875fe9cd)
+
+
+This are the batteries tha we are gonna use in the vehicle that are li-ion batteries.
 
 **Pixy Cam v2:**
 | Specifications: |
@@ -101,19 +115,8 @@ It is a sensor that uses ultrasonic sounds to detect the bounce time of sound fr
 | Power input: 5V |
 ![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
-The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour
+The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
-**Battery:**
-| Specifications: |
-| ------------- |
-| Capacity: 9900 mAh |
-| Voltage: 3.6 V o 3.7 V |
-| Discharge rate:  0.25C |
-| Weight: 45 g (one battery) |
-| Size: 18 mm diameter, 65 mm length |
-![gtf](https://github.com/user-attachments/assets/c771bb60-3599-4566-bee3-3cf6875fe9cd)
-
-This are the batteries tha we are gonna use in the vehicle that are li-ion batteries
 
 
 
