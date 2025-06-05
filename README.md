@@ -23,12 +23,12 @@ This challenge emphasizes all aspects of the engineering process, including:
 **Motor DC 12v with encoder:**
 | Specifications: |
 | ------------- |
-|  |
-|  |
-|  |
-|  |
-|  |
-|  |
+| Voltage: 12V |
+| Gear Ratio: 1:34 |
+| Speed (at 12V): 126 RPM |
+| Torque: 4.2 kg·cm |
+| Weight: 86g |
+| Encoder: Optical, 12 counts per revolution |
 ![25GA370-Encoder](https://github.com/user-attachments/assets/fcea4342-7065-4fc5-91d7-2f9ed98b435b)
 
 
