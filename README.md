@@ -29,7 +29,8 @@ This challenge emphasizes all aspects of the engineering process, including:
 | Torque: 4.2 kg·cm |
 | Weight: 86g |
 | Encoder: Optical, 12 counts per revolution |
-[encoder2](https://github.com/user-attachments/assets/0ec1a6af-bece-4649-9160-36f8b153faa6)
+![encoder2](https://github.com/user-attachments/assets/47492287-88c9-4dba-ba15-793ce49024c4)
+
 
 
 The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (c!
