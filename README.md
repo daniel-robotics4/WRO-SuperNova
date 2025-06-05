@@ -29,6 +29,7 @@ This challenge emphasizes all aspects of the engineering process, including:
 |  |
 |  |
 |  |
+![25GA370-Encoder](https://github.com/user-attachments/assets/fcea4342-7065-4fc5-91d7-2f9ed98b435b)
 
 
 The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (channels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
