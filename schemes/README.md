@@ -1,4 +1,5 @@
 Electromechanical diagrams
 ====
 
-![schematic_bb](https://github.com/user-attachments/assets/5ad2c87a-8d24-41f7-ab70-290f766b4303)
+
+![schematic WITHOUT pixy2](https://github.com/user-attachments/assets/5fa9a0e3-d8f1-481a-870d-f219f1c56cec)
