@@ -2,5 +2,4 @@ Electromechanical diagrams
 ====
 
 
-
-![schematic_with pixy](https://github.com/user-attachments/assets/7ea6ba5d-1e1d-4a5a-87e3-f53dd05efce2)
+![dia 20](https://github.com/user-attachments/assets/5318fa11-a3af-4c88-b079-42928f793da5)
