@@ -2,4 +2,5 @@ Electromechanical diagrams
 ====
 
 
-![schematic WITHOUT pixy2](https://github.com/user-attachments/assets/5fa9a0e3-d8f1-481a-870d-f219f1c56cec)
+
+![schematic_with pixy](https://github.com/user-attachments/assets/7ea6ba5d-1e1d-4a5a-87e3-f53dd05efce2)
