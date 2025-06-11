@@ -92,12 +92,12 @@ It is a sensor that uses ultrasonic sounds to detect the bounce time of sound fr
 **Battery:**
 | Specifications: |
 | ------------- |
-| Capacity: 9900 mAh |
-| Voltage: 3.6 V o 3.7 V |
+| Capacity: 3000 mAh |
+| Voltage: 3.7 V |
 | Discharge rate:  0.25C |
-| Weight: 45 g (one battery) |
+| Weight: 48 g (one battery) |
 | Size: 18 mm diameter, 65 mm length |
-![gtf](https://github.com/user-attachments/assets/c771bb60-3599-4566-bee3-3cf6875fe9cd)
+![image](https://github.com/user-attachments/assets/09afb713-b1cb-4bf8-b15b-2e0a06950587)
 
 
 This are the batteries tha we are gonna use in the vehicle that are li-ion batteries.
