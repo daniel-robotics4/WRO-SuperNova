@@ -1,3 +1,19 @@
+# Index
+
+- [The Project](#the-project)
+- [The Challenge](#the-challenge)
+- [Photos of DELTA](#photos-of-delta)
+- [Management](#management)
+  - [Mobility Management](#mobility-mangement)
+    - Motor DC 12v with encoder
+    - Servo Motor 9g
+    - Motor driver shield (L293)
+  - [Power and Sense Management](#power-and-sense-management)
+    - Arduino Mega 2560
+    - Ultrasonic sensors (HC-SR04)
+    - Battery
+    - Pixy Cam v2
+      
 The Project
 ===
 Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes code for ultrasonic sensors, which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
