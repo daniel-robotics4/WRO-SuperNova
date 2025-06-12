@@ -138,7 +138,134 @@ These are the batteries that we are gonna use in the vehicle that are li-ion bat
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
 
+# Software/Code Documentation – `CodigoDeluxe1_5.ino`
 
+This document describes the structure, logic, and key functions of the main robot software file: `src/CodigoDeluxe1_5.ino` in the WRO-SuperNova project.
+
+---
+
+## 1. Overview
+
+This Arduino C++ program controls an autonomous vehicle equipped with:
+- **4 ultrasonic sensors** (front, rear, left, right) for obstacle detection
+- **DC motor with encoder** for propulsion and distance measurement
+- **Servo motor** for steering
+- **Motor Shield** for motor control
+
+Sensor readings and simple state logic are used to navigate an environment with obstacles.
+
+---
+
+## 2. Main Components & Libraries
+
+- `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
+- `Servo.h`: Standard Arduino servo control.
+- `NewPing.h`: Efficient handling of ultrasonic sensors.
+- `QuadratureEncoder.h`: For reading the encoder pulses on the drive wheel.
+
+---
+
+## 3. Pin Configuration & Hardware Variables
+
+- **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
+- **Encoder**: Analog pins A8, A9.
+- **Servo**: Digital pin 38.
+- **Motor**: Connected to Motor Shield port M3.
+
+---
+
+## 4. Core Variables
+
+- `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
+- `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
+- `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
+- `Switch`, `bandera`: State variables for decision-making and maneuver execution.
+
+---
+
+## 5. Main Control Logic
+
+### a. Initialization (`setup()`)
+
+- Initializes serial communication for debugging.
+- Attaches the servo and sets it to the center position.
+- Stops the motor and resets encoder counters.
+
+### b. Main Loop (`loop()`)
+
+- Reads all ultrasonic sensor values.
+- Moves forward by default.
+- Prints sensor readings for debugging.
+- Decides on maneuver using `if`/`else` statements:
+    - If right and front are clear: turn left.
+    - If left and front are clear: turn right.
+    - If right or left is blocked: perform correction.
+    - If front is blocked: perform reverse and correction (with two 'bandera' cases).
+- Executes the selected maneuver using a switch-case structure:
+    - `paredder`, `paredizq`, `correccionIzquierda`, `correccionDerecha`, `correccionFrontalBandera1`, `correccionFrontalBandera2`, or continue forward.
+
+---
+
+## 6. Key Functions
+
+- **Movement**
+    - `avanza(int speed)`: Move forward.
+    - `retrocede(int speed)`: Move backward.
+    - `detenido()`: Stop.
+- **Steering**
+    - `girarder()`: Turn servo right.
+    - `girarizq()`: Turn servo left.
+    - `centrado()`: Center the steering.
+- **Sensor Reading**
+    - `readUltrasonicSensors()`: Acquire all sensor data and handle out-of-range readings.
+- **Encoder Management**
+    - `updateEncoderDistance()`: Calculate and store distance traveled.
+- **Corrections and Maneuvers**
+    - `paredizq()`, `paredder()`: Wall following/turning.
+    - `correccionFrontalBandera1/2()`: Correction after frontal obstacle (depends on last turn).
+    - `correccionDerecha()`, `correccionIzquierda()`: Side corrections.
+
+---
+
+## 7. Example: Decision-Making Logic
+
+```cpp
+if ((distanceRight > 100) &&  (distanceFront > 150)){
+    Switch = 1; // turn left
+} else if ((distanceLeft > 100) &&  (distanceFront > 15)) {
+    Switch = 2; // turn right
+} else if (distanceRight < 10) {
+    Switch = 3; // correction left
+} else if (distanceLeft < 10) {
+    Switch = 4; // correction right
+} else if ((distanceFront < 10) && bandera == 1) {
+    Switch = 5; // reverse & correct left
+} else if ((distanceFront < 10) && bandera == 2) {
+    Switch = 6; // reverse & correct right
+} else {
+    Switch = 0; // default: move forward
+}
+```
+
+---
+
+## 8. Usage Instructions
+
+1. Open `CodigoDeluxe1_5.ino` in the Arduino IDE.
+2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
+3. Connect hardware per pin configuration.
+4. Upload the code to the Arduino Mega 2560.
+5. Power on the robot and observe autonomous navigation.
+
+---
+
+## 9. Best Practices
+
+- Update this documentation whenever the code or logic changes.
+- Use descriptive variable names and add inline comments for new features.
+- For detailed behavior changes, update the relevant function descriptions here.
+
+---
 
 
 
