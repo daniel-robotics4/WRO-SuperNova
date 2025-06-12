@@ -2,7 +2,7 @@ SuperNova
 ====
 ![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
 
-
+This repository contains the documentation for the SuperNova team's robot for the 2025 World Robot Olympiad Future Engineers competition. The robot, was designed and built by a team of three students.
 
 # Index
 
