@@ -118,7 +118,7 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
 
 
-**Battery:**
+**18650 Battery:**
 | Specifications: |
 | ------------- |
 | Capacity: 3000 mAh |
@@ -128,8 +128,8 @@ It is a sensor that uses ultrasonic sounds to detect the bounce time of sound fr
 | Size: 18 mm diameter, 65 mm length |
 ![image](https://github.com/user-attachments/assets/09afb713-b1cb-4bf8-b15b-2e0a06950587)
 
+we are going to use 3 of these li-ion batterys to power the vehicle with an 18650 battery holder.
 
-These are the batteries that we are gonna use in the vehicle that are li-ion batteries.
 
 **PixyCam v2:**
 | Specifications: |
