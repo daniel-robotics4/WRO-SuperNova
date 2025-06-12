@@ -13,7 +13,16 @@
     - Ultrasonic sensors (HC-SR04)
     - Battery
     - Pixy Cam v2
-      
+ - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe1_6ino)
+   - [1. Overview](#1-overview)
+   - [2. Main Components & Libraries](#2-main-components--libraries)
+   - [3. Pin Configuration & Hardware Variables](#3-pin-configuration--hardware-variables)
+   - [4. Core Variables](#4-core-variables)
+   - [5. Main Control Logic](#5-main-control-logic)
+   - [6. Key Functions](#6-key-functions)
+   - [7. Example: Event Handling Logic](#7-example-event-handling-logic)
+   - [8. Usage Instructions](#8-usage-instructions)
+
 The Project
 ===
 Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes code for ultrasonic sensors, which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
@@ -138,13 +147,13 @@ These are the batteries that we are gonna use in the vehicle that are li-ion bat
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
 
-# Software/Code Documentation – `CodigoDeluxe1_6.ino`
+## Software/Code Documentation – `CodigoDeluxe1_6.ino`
 
 This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe1_6.ino` in the WRO-SuperNova project.
 
 ---
 
-## 1. Overview
+### 1. Overview
 
 This Arduino C++ program controls an autonomous robot using:
 - **4 ultrasonic sensors** for obstacle detection
@@ -157,7 +166,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 2. Main Components & Libraries
+### 2. Main Components & Libraries
 
 - `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
 - `Servo.h`: Standard Arduino servo control.
@@ -167,7 +176,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 3. Pin Configuration & Hardware Variables
+### 3. Pin Configuration & Hardware Variables
 
 - **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
 - **Encoder**: Analog pins A8, A9.
@@ -176,7 +185,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 4. Core Variables
+### 4. Core Variables
 
 - `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
 - `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
@@ -185,22 +194,22 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 5. Main Control Logic
+### 5. Main Control Logic
 
-### a. Initialization (`setup()`)
+#### a. Initialization (`setup()`)
 
 - Initializes serial communication for debugging.
 - Attaches the servo and sets it to the center position.
 - Stops the motor and resets encoder counters.
 - Sets up a timer interrupt using `Timer1` to call `handleUltrasonicEvents()` every 100 ms for responsive sensor-based decisions.
 
-### b. Main Loop (`loop()`)
+#### b. Main Loop (`loop()`)
 
 - Reads all ultrasonic sensor values.
 - Prints sensor and encoder readings for debugging.
 - Moves forward by default (`avanza(200)`).
 
-### c. Timer-Based Event Handling (`handleUltrasonicEvents()`)
+#### c. Timer-Based Event Handling (`handleUltrasonicEvents()`)
 
 - Reads ultrasonic sensors and evaluates conditions for maneuvers:
     - If right is open and front blocked: turn right.
@@ -212,7 +221,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 6. Key Functions
+### 6. Key Functions
 
 - **Movement**
     - `avanza(int speed)`: Move forward.
@@ -233,9 +242,9 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 ---
 
-## 7. Example: Event Handling Logic
+## #7. Example: Event Handling Logic
 
-```cpp
+```
 void handleUltrasonicEvents() {
     readUltrasonicSensors();
 
@@ -263,7 +272,7 @@ void handleUltrasonicEvents() {
 
 ---
 
-## 8. Usage Instructions
+### 8. Usage Instructions
 
 1. Open `CodigoDeluxe1_6.ino` in the Arduino IDE.
 2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder, TimerOne).
