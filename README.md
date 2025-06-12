@@ -138,21 +138,22 @@ These are the batteries that we are gonna use in the vehicle that are li-ion bat
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
 
-# Software/Code Documentation – `CodigoDeluxe1_5.ino`
+# Software/Code Documentation – `CodigoDeluxe1_6.ino`
 
-This document describes the structure, logic, and key functions of the main robot software file: `src/CodigoDeluxe1_5.ino` in the WRO-SuperNova project.
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe1_6.ino` in the WRO-SuperNova project.
 
 ---
 
 ## 1. Overview
 
-This Arduino C++ program controls an autonomous vehicle equipped with:
-- **4 ultrasonic sensors** (front, rear, left, right) for obstacle detection
-- **DC motor with encoder** for propulsion and distance measurement
+This Arduino C++ program controls an autonomous robot using:
+- **4 ultrasonic sensors** for obstacle detection
+- **DC motor with encoder** for movement and distance measurement
 - **Servo motor** for steering
-- **Motor Shield** for motor control
+- **Adafruit Motor Shield** for motor control
+- **Timer interrupt** for periodic sensor/event processing
 
-Sensor readings and simple state logic are used to navigate an environment with obstacles.
+Sensor readings and state logic are used for real-time autonomous navigation and obstacle avoidance.
 
 ---
 
@@ -162,6 +163,7 @@ Sensor readings and simple state logic are used to navigate an environment with 
 - `Servo.h`: Standard Arduino servo control.
 - `NewPing.h`: Efficient handling of ultrasonic sensors.
 - `QuadratureEncoder.h`: For reading the encoder pulses on the drive wheel.
+- `TimerOne.h`: For timer interrupts and periodic function execution.
 
 ---
 
@@ -169,7 +171,7 @@ Sensor readings and simple state logic are used to navigate an environment with 
 
 - **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
 - **Encoder**: Analog pins A8, A9.
-- **Servo**: Digital pin 38.
+- **Servo**: Digital pin 38 (`SERVO_PIN`).
 - **Motor**: Connected to Motor Shield port M3.
 
 ---
@@ -179,7 +181,7 @@ Sensor readings and simple state logic are used to navigate an environment with 
 - `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
 - `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
 - `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
-- `Switch`, `bandera`: State variables for decision-making and maneuver execution.
+- `Switch`, `bandera`: State/mode variables for maneuver selection and execution.
 
 ---
 
@@ -190,19 +192,23 @@ Sensor readings and simple state logic are used to navigate an environment with 
 - Initializes serial communication for debugging.
 - Attaches the servo and sets it to the center position.
 - Stops the motor and resets encoder counters.
+- Sets up a timer interrupt using `Timer1` to call `handleUltrasonicEvents()` every 100 ms for responsive sensor-based decisions.
 
 ### b. Main Loop (`loop()`)
 
 - Reads all ultrasonic sensor values.
-- Moves forward by default.
-- Prints sensor readings for debugging.
-- Decides on maneuver using `if`/`else` statements:
-    - If right and front are clear: turn left.
-    - If left and front are clear: turn right.
+- Prints sensor and encoder readings for debugging.
+- Moves forward by default (`avanza(200)`).
+
+### c. Timer-Based Event Handling (`handleUltrasonicEvents()`)
+
+- Reads ultrasonic sensors and evaluates conditions for maneuvers:
+    - If right is open and front blocked: turn right.
+    - If left is open and front blocked: turn left.
     - If right or left is blocked: perform correction.
-    - If front is blocked: perform reverse and correction (with two 'bandera' cases).
-- Executes the selected maneuver using a switch-case structure:
-    - `paredder`, `paredizq`, `correccionIzquierda`, `correccionDerecha`, `correccionFrontalBandera1`, `correccionFrontalBandera2`, or continue forward.
+    - If front is blocked (with last direction): perform reverse and correction (bandera 1 or 2).
+    - Otherwise: move forward.
+- Calls the appropriate maneuver and updates encoder distance.
 
 ---
 
@@ -221,29 +227,37 @@ Sensor readings and simple state logic are used to navigate an environment with 
 - **Encoder Management**
     - `updateEncoderDistance()`: Calculate and store distance traveled.
 - **Corrections and Maneuvers**
-    - `paredizq()`, `paredder()`: Wall following/turning.
-    - `correccionFrontalBandera1/2()`: Correction after frontal obstacle (depends on last turn).
+    - `paredizq()`, `paredder()`: Wall following/turning with distance update.
+    - `correccionFrontalBandera1/2()`: Correction after a frontal obstacle.
     - `correccionDerecha()`, `correccionIzquierda()`: Side corrections.
 
 ---
 
-## 7. Example: Decision-Making Logic
+## 7. Example: Event Handling Logic
 
 ```cpp
-if ((distanceRight > 100) &&  (distanceFront > 150)){
-    Switch = 1; // turn left
-} else if ((distanceLeft > 100) &&  (distanceFront > 15)) {
-    Switch = 2; // turn right
-} else if (distanceRight < 10) {
-    Switch = 3; // correction left
-} else if (distanceLeft < 10) {
-    Switch = 4; // correction right
-} else if ((distanceFront < 10) && bandera == 1) {
-    Switch = 5; // reverse & correct left
-} else if ((distanceFront < 10) && bandera == 2) {
-    Switch = 6; // reverse & correct right
-} else {
-    Switch = 0; // default: move forward
+void handleUltrasonicEvents() {
+    readUltrasonicSensors();
+
+    if ((distanceRight > 100) && (distanceFront < 10)){
+        paredder(); return;
+    }
+    if ((distanceLeft > 100) && (distanceFront < 10)){
+        paredizq(); return;
+    }
+    if (distanceRight < 5) {
+        correccionIzquierda(); return;
+    }
+    if (distanceLeft < 5) {
+        correccionDerecha(); return;
+    }
+    if ((distanceFront < 10) && bandera == 1) {
+        correccionFrontalBandera1(); return;
+    }
+    if ((distanceFront < 10) && bandera == 2) {
+        correccionFrontalBandera2(); return;
+    }
+    avanza(100); // Default action
 }
 ```
 
@@ -251,19 +265,11 @@ if ((distanceRight > 100) &&  (distanceFront > 150)){
 
 ## 8. Usage Instructions
 
-1. Open `CodigoDeluxe1_5.ino` in the Arduino IDE.
-2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
-3. Connect hardware per pin configuration.
+1. Open `CodigoDeluxe1_6.ino` in the Arduino IDE.
+2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder, TimerOne).
+3. Connect hardware per the pin configuration.
 4. Upload the code to the Arduino Mega 2560.
-5. Power on the robot and observe autonomous navigation.
-
----
-
-## 9. Best Practices
-
-- Update this documentation whenever the code or logic changes.
-- Use descriptive variable names and add inline comments for new features.
-- For detailed behavior changes, update the relevant function descriptions here.
+5. Power on the robot and observe autonomous operation.
 
 ---
 
