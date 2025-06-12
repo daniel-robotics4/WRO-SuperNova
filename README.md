@@ -11,7 +11,7 @@
   - [Power and Sense Management](#power-and-sense-management)
     - Arduino Mega 2560
     - Ultrasonic sensors (HC-SR04)
-    - Battery
+    - 18650 Battery
     - Pixy Cam v2
  - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe1_6ino)
    - [1. Overview](#1-overview)
