@@ -41,7 +41,7 @@ This challenge emphasizes all aspects of the engineering process, including:
 
 ## Management
 
-### Mobility Mangement
+### Mobility Management
 
 **Motor DC 12v with encoder:**
 | Specifications: |
@@ -77,16 +77,16 @@ A servomotor is integrated into the system to control steering. The servo receiv
 | Can handle: 4 DC motors or 2 stepper motors and 2 servo motors |
 ![mtr cntrlr](https://github.com/user-attachments/assets/fd5479d2-4d84-43ed-bd1c-b6e060d37bcf)
 
-is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
+It is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
 The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
 
 ### Power and Sense Management
-**Arduino mega 2560:**
+**Arduino Mega 2560:**
 | Specifications: |
 | ------------- |
 | Microcontroller: ATmega2560 | 
-| Flash memory: 256 KB |
-| SRAM: 8 KB |
+| Flash memory: 256 kB |
+| SRAM: 8 kB |
 | Frequency: 16 MHz |
 | Pins: 56 |
 | Input voltage: 5V  |
@@ -94,7 +94,7 @@ The motor driver shield is designed to handle the power requirements of the DC m
  
 Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
 
-**ultrasonic sensors (hc-sr04):**
+**Ultrasonic sensors (hc-sr04):**
 | Specifications: |
 | ------------- |
 | Accuracy: 3cm |
@@ -120,9 +120,9 @@ It is a sensor that uses ultrasonic sounds to detect the bounce time of sound fr
 ![image](https://github.com/user-attachments/assets/09afb713-b1cb-4bf8-b15b-2e0a06950587)
 
 
-This are the batteries tha we are gonna use in the vehicle that are li-ion batteries.
+These are the batteries that we are gonna use in the vehicle that are li-ion batteries.
 
-**Pixy Cam v2:**
+**PixyCam v2:**
 | Specifications: |
 | ------------- |
 | Processor: NXP LPC4330 |
