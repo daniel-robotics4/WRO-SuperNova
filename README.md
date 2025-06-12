@@ -1,3 +1,9 @@
+SuperNova 
+====
+![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
+
+
+
 # Index
 
 - [The Project](#the-project)
