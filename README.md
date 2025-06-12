@@ -156,10 +156,10 @@ This document describes the structure, logic, and key functions of the file: `sr
 ### 1. Overview
 
 This Arduino C++ program controls an autonomous robot using:
-- **4 ultrasonic sensors** for obstacle detection
+- **3 ultrasonic sensors** for obstacle detection
 - **DC motor with encoder** for movement and distance measurement
 - **Servo motor** for steering
-- **Adafruit Motor Shield** for motor control
+- **Motor Shield** for motor control
 - **Timer interrupt** for periodic sensor/event processing
 
 Sensor readings and state logic are used for real-time autonomous navigation and obstacle avoidance.
