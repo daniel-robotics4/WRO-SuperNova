@@ -4,7 +4,7 @@
 - [The Challenge](#the-challenge)
 - [Photos of DELTA](#photos-of-delta)
 - [Management](#management)
-  - [Mobility Management](#mobility-mangement)
+  - [Mobility Management](#mobility-management)
     - Motor DC 12v with encoder
     - Servo Motor 9g
     - Motor driver shield (L293)
