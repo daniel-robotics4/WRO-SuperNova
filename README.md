@@ -153,9 +153,9 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
 
-## Software/Code Documentation – `CodigoDeluxe1_6.ino`
+## Software/Code Documentation – `CodigoDeluxe1_7.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe1_6.ino` in the WRO-SuperNova project.
+This document describes the structure, logic, and key functions of the file: `src/codigoDeluxe1_7.ino` in the WRO-SuperNova project.
 
 ---
 
