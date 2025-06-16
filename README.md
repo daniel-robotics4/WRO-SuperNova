@@ -19,7 +19,7 @@ This repository contains the documentation for the SuperNova team's robot for th
     - Ultrasonic sensors (HC-SR04)
     - 18650 Battery
     - Pixy Cam v2
- - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe1_6ino)
+ - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe1_9ino)
    - [1. Overview](#1-overview)
    - [2. Main Components & Libraries](#2-main-components--libraries)
    - [3. Pin Configuration & Hardware Variables](#3-pin-configuration--hardware-variables)
@@ -153,22 +153,22 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
 
 
-## Software/Code Documentation – `CodigoDeluxe1_7.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/codigoDeluxe1_7.ino` in the WRO-SuperNova project.
+## Software/Code Documentation – `CodigoDeluxe1_9.ino`
+
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe1_9.ino` in the WRO-SuperNova project.
 
 ---
 
 ### 1. Overview
 
 This Arduino C++ program controls an autonomous robot using:
-- **3 ultrasonic sensors** for obstacle detection
-- **DC motor with encoder** for movement and distance measurement
+- **4 ultrasonic sensors** for obstacle detection (front, rear, left, right)
+- **DC motor with encoder** for propulsion and distance measurement
 - **Servo motor** for steering
-- **Motor Shield** for motor control
-- **Timer interrupt** for periodic sensor/event processing
+- **Adafruit Motor Shield** for motor control
 
-Sensor readings and state logic are used for real-time autonomous navigation and obstacle avoidance.
+The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, decision-making at intersections, and executing left/right turns, as well as dynamic corrections to maintain centering in a corridor.
 
 ---
 
@@ -177,8 +177,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 - `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
 - `Servo.h`: Standard Arduino servo control.
 - `NewPing.h`: Efficient handling of ultrasonic sensors.
-- `QuadratureEncoder.h`: For reading the encoder pulses on the drive wheel.
-- `TimerOne.h`: For timer interrupts and periodic function execution.
+- `QuadratureEncoder.h`: Reads pulses from the drive wheel encoder.
 
 ---
 
@@ -186,7 +185,7 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 - **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
 - **Encoder**: Analog pins A8, A9.
-- **Servo**: Digital pin 38 (`SERVO_PIN`).
+- **Servo**: Digital pin 38.
 - **Motor**: Connected to Motor Shield port M3.
 
 ---
@@ -195,8 +194,9 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 
 - `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
 - `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
+- `CarState currentState`: Controls the robot's mode (e.g., STRAIGHT, DECIDIR_SENTIDO, GIROLEFT, GIRORIGHT, STOPPED, etc.).
+- Navigation parameters: `objetoDelante`, `paredCerca`, `paredLejos`, `carritoCentrado`, `toleranciaPared`, `pasilloAbierto`, `pasilloCerrado` for flexible environmental adaptation.
 - `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
-- `Switch`, `bandera`: State/mode variables for maneuver selection and execution.
 
 ---
 
@@ -207,23 +207,24 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 - Initializes serial communication for debugging.
 - Attaches the servo and sets it to the center position.
 - Stops the motor and resets encoder counters.
-- Sets up a timer interrupt using `Timer1` to call `handleUltrasonicEvents()` every 100 ms for responsive sensor-based decisions.
+- Initial state is `INICIAL`.
 
 #### b. Main Loop (`loop()`)
 
-- Reads all ultrasonic sensor values.
-- Prints sensor and encoder readings for debugging.
-- Moves forward by default (`avanza(200)`).
+- Reads all ultrasonic sensor values and updates encoder distance.
+- Prints current encoder and state for debugging.
+- State machine (`switch(currentState)`) handles robot modes:
+    - **INICIAL**: Sets up and transitions to STRAIGHT.
+    - **STRAIGHT**: Moves forward, keeps centered in the corridor using lateral corrections, and transitions to DECIDIR_SENTIDO if an obstacle is detected ahead.
+    - **DECIDIR_SENTIDO**: Decides whether to turn left or right at an intersection based on open paths.
+    - **GIROLEFT/GIRORIGHT**: Executes left or right turn sequence, then transitions to STOPPED.
+    - **STOPPED**: Stops the robot.
+    - **Default**: Stops the robot.
 
-#### c. Timer-Based Event Handling (`handleUltrasonicEvents()`)
+#### c. Correction and Maneuver Logic
 
-- Reads ultrasonic sensors and evaluates conditions for maneuvers:
-    - If right is open and front blocked: turn right.
-    - If left is open and front blocked: turn left.
-    - If right or left is blocked: perform correction.
-    - If front is blocked (with last direction): perform reverse and correction (bandera 1 or 2).
-    - Otherwise: move forward.
-- Calls the appropriate maneuver and updates encoder distance.
+- **Dynamic centering**: If robot is too close or too far from the left wall, makes small corrections (via `straightDer`, `straightIzq`) to re-center.
+- **Decision-making**: At intersections, checks which direction is open and executes the appropriate turn sequence.
 
 ---
 
@@ -242,37 +243,33 @@ Sensor readings and state logic are used for real-time autonomous navigation and
 - **Encoder Management**
     - `updateEncoderDistance()`: Calculate and store distance traveled.
 - **Corrections and Maneuvers**
-    - `paredizq()`, `paredder()`: Wall following/turning with distance update.
-    - `correccionFrontalBandera1/2()`: Correction after a frontal obstacle.
-    - `correccionDerecha()`, `correccionIzquierda()`: Side corrections.
+    - `paredizq()`, `paredder()`: Wall following/turning (not actively used in main state machine but available).
+    - `straightDer()`, `straightIzq()`: Small corrections to maintain centering.
 
 ---
 
-## #7. Example: Event Handling Logic
+### 7. Example: State Machine and Correction Logic
 
-```
-void handleUltrasonicEvents() {
-    readUltrasonicSensors();
-
-    if ((distanceRight > 100) && (distanceFront < 10)){
-        paredder(); return;
+```cpp
+switch (currentState) {
+  case STRAIGHT:
+    avanza(200);
+    if (distanceFront < objetoDelante && distanceFront != MAX_DISTANCE) {
+      currentState = DECIDIR_SENTIDO;
+      break;
     }
-    if ((distanceLeft > 100) && (distanceFront < 10)){
-        paredizq(); return;
+    if (distanceRight != MAX_DISTANCE && distanceLeft != MAX_DISTANCE) {
+      if (distanceLeft < paredCerca - toleranciaPared) {
+        straightDer();
+      } else if (distanceLeft > paredLejos + toleranciaPared) {
+        straightIzq();
+      } else {
+        centrado();
+      }
+    } else {
+      centrado();
     }
-    if (distanceRight < 5) {
-        correccionIzquierda(); return;
-    }
-    if (distanceLeft < 5) {
-        correccionDerecha(); return;
-    }
-    if ((distanceFront < 10) && bandera == 1) {
-        correccionFrontalBandera1(); return;
-    }
-    if ((distanceFront < 10) && bandera == 2) {
-        correccionFrontalBandera2(); return;
-    }
-    avanza(100); // Default action
+    break;
 }
 ```
 
@@ -280,13 +277,14 @@ void handleUltrasonicEvents() {
 
 ### 8. Usage Instructions
 
-1. Open `CodigoDeluxe1_6.ino` in the Arduino IDE.
-2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder, TimerOne).
+1. Open `CodigoDeluxe1_9.ino` in the Arduino IDE.
+2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
 3. Connect hardware per the pin configuration.
 4. Upload the code to the Arduino Mega 2560.
 5. Power on the robot and observe autonomous operation.
 
 ---
+
 
 
 
