@@ -154,13 +154,14 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 
 
 
-## Software/Code Documentation – `CodigoDeluxe1_9.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe1_9.ino` in the WRO-SuperNova project.
+# Software/Code Documentation – `CodigoDeluxe2_0.ino`
+
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe2_0.ino` in the WRO-SuperNova project.
 
 ---
 
-### 1. Overview
+## 1. Overview
 
 This Arduino C++ program controls an autonomous robot using:
 - **4 ultrasonic sensors** for obstacle detection (front, rear, left, right)
@@ -168,11 +169,11 @@ This Arduino C++ program controls an autonomous robot using:
 - **Servo motor** for steering
 - **Adafruit Motor Shield** for motor control
 
-The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, decision-making at intersections, and executing left/right turns, as well as dynamic corrections to maintain centering in a corridor.
+The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, decision-making at intersections, and executing left/right turns, as well as dynamic corrections to maintain centering in a corridor. It features a `sentido` variable to remember the last chosen direction at intersections.
 
 ---
 
-### 2. Main Components & Libraries
+## 2. Main Components & Libraries
 
 - `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
 - `Servo.h`: Standard Arduino servo control.
@@ -181,7 +182,7 @@ The code uses a state machine (`CarState`) to manage navigation behaviors, inclu
 
 ---
 
-### 3. Pin Configuration & Hardware Variables
+## 3. Pin Configuration & Hardware Variables
 
 - **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
 - **Encoder**: Analog pins A8, A9.
@@ -190,45 +191,47 @@ The code uses a state machine (`CarState`) to manage navigation behaviors, inclu
 
 ---
 
-### 4. Core Variables
+## 4. Core Variables
 
 - `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
 - `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
-- `CarState currentState`: Controls the robot's mode (e.g., STRAIGHT, DECIDIR_SENTIDO, GIROLEFT, GIRORIGHT, STOPPED, etc.).
+- `CarState currentState`: Controls the robot's mode (e.g., INICIAL, STRAIGHT, DECIDIR_SENTIDO, GIROLEFT, GIRORIGHT, SENTIDO, STOPPED, etc.).
 - Navigation parameters: `objetoDelante`, `paredCerca`, `paredLejos`, `carritoCentrado`, `toleranciaPared`, `pasilloAbierto`, `pasilloCerrado` for flexible environmental adaptation.
 - `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
+- `sentido`: Remembers the last chosen direction at intersections (1 = right, 2 = left).
 
 ---
 
-### 5. Main Control Logic
+## 5. Main Control Logic
 
-#### a. Initialization (`setup()`)
+### a. Initialization (`setup()`)
 
 - Initializes serial communication for debugging.
 - Attaches the servo and sets it to the center position.
 - Stops the motor and resets encoder counters.
 - Initial state is `INICIAL`.
 
-#### b. Main Loop (`loop()`)
+### b. Main Loop (`loop()`)
 
 - Reads all ultrasonic sensor values and updates encoder distance.
 - Prints current encoder and state for debugging.
 - State machine (`switch(currentState)`) handles robot modes:
-    - **INICIAL**: Sets up and transitions to STRAIGHT.
-    - **STRAIGHT**: Moves forward, keeps centered in the corridor using lateral corrections, and transitions to DECIDIR_SENTIDO if an obstacle is detected ahead.
-    - **DECIDIR_SENTIDO**: Decides whether to turn left or right at an intersection based on open paths.
-    - **GIROLEFT/GIRORIGHT**: Executes left or right turn sequence, then transitions to STOPPED.
+    - **INICIAL**: Sets up, moves forward, transitions to `DECIDIR_SENTIDO` if an obstacle is detected ahead.
+    - **STRAIGHT**: Moves forward, keeps centered in the corridor using lateral corrections, and transitions to `SENTIDO` if an obstacle is detected ahead and a direction has already been chosen.
+    - **DECIDIR_SENTIDO**: Decides whether to turn left or right at an intersection based on open paths, sets `sentido`, and transitions to the appropriate turn state.
+    - **GIROLEFT/GIRORIGHT**: Executes left or right turn sequence, then transitions to `STRAIGHT`.
+    - **SENTIDO**: If `sentido` is set, transitions to the corresponding turn state.
     - **STOPPED**: Stops the robot.
     - **Default**: Stops the robot.
 
-#### c. Correction and Maneuver Logic
+### c. Correction and Maneuver Logic
 
-- **Dynamic centering**: If robot is too close or too far from the left wall, makes small corrections (via `straightDer`, `straightIzq`) to re-center.
-- **Decision-making**: At intersections, checks which direction is open and executes the appropriate turn sequence.
+- **Dynamic centering**: If robot is too close or too far from the left/right wall, makes small corrections (via `straightDer`, `straightIzq`) to re-center.
+- **Decision-making**: At intersections, checks which direction is open and executes the appropriate turn sequence, updating `sentido`.
 
 ---
 
-### 6. Key Functions
+## 6. Key Functions
 
 - **Movement**
     - `avanza(int speed)`: Move forward.
@@ -243,25 +246,25 @@ The code uses a state machine (`CarState`) to manage navigation behaviors, inclu
 - **Encoder Management**
     - `updateEncoderDistance()`: Calculate and store distance traveled.
 - **Corrections and Maneuvers**
-    - `paredizq()`, `paredder()`: Wall following/turning (not actively used in main state machine but available).
+    - `paredizq()`, `paredder()`: Wall following/turning.
     - `straightDer()`, `straightIzq()`: Small corrections to maintain centering.
 
 ---
 
-### 7. Example: State Machine and Correction Logic
+## 7. Example: State Machine and Correction Logic
 
 ```cpp
 switch (currentState) {
   case STRAIGHT:
-    avanza(200);
-    if (distanceFront < objetoDelante && distanceFront != MAX_DISTANCE) {
-      currentState = DECIDIR_SENTIDO;
+    avanza(170);
+    if (distanceFront < objetoDelante && distanceFront != MAX_DISTANCE && sentido != 0) {
+      currentState = SENTIDO;
       break;
     }
     if (distanceRight != MAX_DISTANCE && distanceLeft != MAX_DISTANCE) {
       if (distanceLeft < paredCerca - toleranciaPared) {
         straightDer();
-      } else if (distanceLeft > paredLejos + toleranciaPared) {
+      } else if (distanceRight < paredCerca - toleranciaPared && distanceRight < distanceLeft) {
         straightIzq();
       } else {
         centrado();
@@ -275,15 +278,18 @@ switch (currentState) {
 
 ---
 
-### 8. Usage Instructions
+## 8. Usage Instructions
 
-1. Open `CodigoDeluxe1_9.ino` in the Arduino IDE.
+1. Open `CodigoDeluxe2_0.ino` in the Arduino IDE.
 2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
 3. Connect hardware per the pin configuration.
 4. Upload the code to the Arduino Mega 2560.
 5. Power on the robot and observe autonomous operation.
 
 ---
+
+
+
 
 
 
