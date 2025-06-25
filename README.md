@@ -75,13 +75,14 @@ This challenge emphasizes all aspects of the engineering process, including:
 The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (c!
 hannels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
 
-**Servo Motor 9g:**
+**Servo Motor MG995:**
 | Specifications: |
 | ------------- |
 | Voltage: 4.8-6V |
-| Torque: 1.6-1.8 kg/cm |
+| Torque: 9.4/11 kg/cm |
 | Rotation: 180° ± 10°  |
-![servo](https://github.com/user-attachments/assets/616dea0b-ce80-44be-adf4-3006b407275c)
+![617BvnN0VJL _SL1500_](https://github.com/user-attachments/assets/b501ca45-12d2-46de-9c1c-de0f9dc0fb90)
+
 
 A servomotor is integrated into the system to control steering. The servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. The servo’s position is controlled programmatically to perform smooth and accurate movements.
 
@@ -113,14 +114,14 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 **Tof laser sensors:**
 | Specifications: |
 | ------------- |
-| Accuracy: 3cm |
-| Measurement Range: 2cm to 400cm |
-| Resolution: 0.3 cm |
-| Frequency: 40 kHz|
+| Accuracy:  ±3% |
+| Measurement Range: 200 cm |
+| Resolution:  1 mm |
 | Input voltage: 5V  |
-| Operating Current: 15 mA |
+| Operating Current: 20mW |
+![VL53L0X module 1-600x600](https://github.com/user-attachments/assets/9702f289-94c3-442c-967c-45ee7df4e8a6)
 
-It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
+It is a sensor pulse to travel to an object and reflect back to the sensor. Using the Arduino Mega 2560, we can accurately determine the distance to obstacles based on this travel time, allowing for precise detection of walls orr that uses time-of-flight (ToF) laser technology to measure the time it takes for a lase objects in the robot's path. This enables the robot to react quickly and accurately, making decisions such as turning or stopping when a nearby obstacle is detected.
 
 
 **18650 Battery:**
