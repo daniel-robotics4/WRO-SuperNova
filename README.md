@@ -134,7 +134,7 @@ It is a sensor pulse to travel to an object and reflect back to the sensor. Usin
 | Size: 18 mm diameter, 65 mm length |
 ![image](https://github.com/user-attachments/assets/09afb713-b1cb-4bf8-b15b-2e0a06950587)
 
-we are going to use 3 of these li-ion batterys to power the vehicle with an 18650 battery holder.
+we are going to use 3 of these li-ion batterys to power the vehicle with an 18650 battery holder. This battery configuration provides a reliable and efficient power source for the robot’s electronics and actuators, supporting extended operation during competition or testing.
 
 
 **PixyCam v2:**
