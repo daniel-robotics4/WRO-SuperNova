@@ -31,7 +31,7 @@ This repository contains the documentation for the SuperNova team's robot for th
 
 The Project
 ===
-Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the Tof laser sensors (time of flight), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
+Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
 
 The core of the system is based on the Arduino Mega 2560 microcontroller, which offers ample input/output pins and processing power to handle multiple sensors and actuators simultaneously. The vehicle integrates a DC motor equipped with an encoder to provide precise feedback on wheel rotation, enabling closed-loop speed and distance control. Four ToF sensors are strategically mounted to provide comprehensive environmental awareness by measuring distances to obstacles in front and on both sides of the vehicle. A motor driver shield manages power delivery and control signals to the motor, while a servomotor is used to actuate steering,the chasis made for this vehicle was made from scratch in a 3d tool an then printed
 
@@ -111,17 +111,17 @@ The motor driver shield is designed to handle the power requirements of the DC m
  
 Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
 
-**Tof laser sensors:**
+**Ultrasonic Sensor (hc-sr04):**
 | Specifications: |
 | ------------- |
 | Accuracy:  ±3% |
-| Measurement Range: 200 cm |
-| Resolution:  1 mm |
+| Measurement Range: 2 a 450 cm |
+| Resolution:  0.3 cm |
 | Input voltage: 5V  |
-| Operating Current: 20mW |
-![VL53L0X module 1-600x600](https://github.com/user-attachments/assets/9702f289-94c3-442c-967c-45ee7df4e8a6)
+| Operating Current: 15mA |
 
-It is a sensor pulse to travel to an object and reflect back to the sensor. Using the Arduino Mega 2560, we can accurately determine the distance to obstacles based on this travel time, allowing for precise detection of walls orr that uses time-of-flight (ToF) laser technology to measure the time it takes for a lase objects in the robot's path. This enables the robot to react quickly and accurately, making decisions such as turning or stopping when a nearby obstacle is detected.
+
+It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
 
 
 **18650 Battery:**
