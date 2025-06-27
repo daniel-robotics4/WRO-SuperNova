@@ -19,7 +19,7 @@ This repository contains the documentation for the SuperNova team's robot for th
     - Ultrasonic sensors (hc-sr04)
     - 18650 Battery
     - Pixy Cam v2
- - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe2_9ino)
+ - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe2_6ino)
    - [1. Overview](#1-overview)
    - [2. Main Components & Libraries](#2-main-components--libraries)
    - [3. Pin Configuration & Hardware Variables](#3-pin-configuration--hardware-variables)
