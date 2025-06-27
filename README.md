@@ -164,77 +164,86 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 
 The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output 
 
-# Software/Code Documentation – `CodigoDeluxe2_2.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe2_2.ino` in the WRO-SuperNova project.
+
+## Software/Code Documentation – `CodigoDeluxe2_6.ino`
+
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe2_6.ino` in the WRO-SuperNova project.
 
 ---
 
-## 1. Overview
+### 1. Overview
 
 This Arduino C++ program controls an autonomous robot using:
 - **4 ultrasonic sensors** for obstacle detection (front, rear, left, right)
 - **DC motor with encoder** for propulsion and distance measurement
 - **Servo motor** for steering
 - **Adafruit Motor Shield** for motor control
-- **MPU6050 gyroscope** for angular orientation and corrections
 
-The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, detecting and handling corners, correcting angle using a gyroscope, and executing left/right turns. The integration of the gyroscope allows for more precise orientation corrections.
+The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, decision-making at intersections, executing left/right turns, and dynamic corrections to maintain centering in a corridor. It also features advanced filtering for ultrasonic sensor readings to improve reliability.
 
 ---
 
-## 2. Main Components & Libraries
+### 2. Main Components & Libraries
 
 - `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
 - `Servo.h`: Standard Arduino servo control.
 - `NewPing.h`: Efficient handling of ultrasonic sensors.
 - `QuadratureEncoder.h`: Reads pulses from the drive wheel encoder.
-- `MPU6050.h` & `Wire.h`: MPU6050 gyroscope/accelerometer sensor and I2C communication.
 
 ---
 
-## 3. Pin Configuration & Hardware Variables
+### 3. Pin Configuration & Hardware Variables
 
-- **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
-- **Encoder**: Analog pins A8, A9.
-- **Servo**: Digital pin 38.
-- **Motor**: Connected to Motor Shield port M3.
-- **Gyroscope (MPU6050)**: Connected via I2C.
+- **Ultrasonic sensors**: Analog and digital pins (TRIGGER and ECHO for each sensor, see code for details).
+- **Encoder**: Digital pins 3 (A), 4 (B).
+- **Servo**: Digital pin 10.
+- **Motor**: Connected to Motor Shield port M2.
 
 ---
 
-## 4. Core Variables
+### 4. Core Variables
 
 - `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
 - `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
-- `CarState currentState`: Controls the robot's mode (e.g., INICIAL, STRAIGHT, LEFT, RIGHT, STOPPED, ESQUINA, CORREGIR_ANGULO).
+- `CarState currentState`: Controls the robot's mode (e.g., INICIAL, STRAIGHT, DECIDIR_SENTIDO, GIROLEFT, GIRORIGHT, SENTIDO, STOPPED, etc.).
+- Navigation parameters: `objetoDelante`, `paredCerca`, `paredLejos`, `carritoCentrado`, `toleranciaPared`, `pasilloAbierto`, `pasilloCerrado` for flexible environmental adaptation.
 - `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
+- **Sensor sampling and filtering**: Each ultrasonic measurement is filtered by taking multiple samples (`cantMuestras`) and discarding the highest and lowest before averaging.
 
 ---
 
-## 5. Main Control Logic
+### 5. Main Control Logic
 
-### a. Initialization (`setup()`)
+#### a. Initialization (`setup()`)
 
 - Initializes serial communication for debugging.
-- Initializes gyroscope (MPU6050) and confirms connection.
 - Attaches the servo and sets it to the center position.
 - Stops the motor and resets encoder counters.
-- Sets initial state to `INICIAL`.
+- Initial state is `INICIAL`.
 
-### b. Main Loop (`loop()`)
+#### b. Main Loop (`loop()`)
 
-- Prints current encoder value and state for debugging.
+- Reads all ultrasonic sensor values using an advanced filtering function for robustness.
+- Updates encoder distance.
+- Prints current encoder and state for debugging.
 - State machine (`switch(currentState)`) handles robot modes:
-    - **INICIAL**: Reads sensors, centers steering, moves forward, checks for open right/left to transition to `RIGHT`/`LEFT`.
-    - **RIGHT**/**LEFT**: Executes corresponding turn and transitions to `STRAIGHT`.
-    - **STRAIGHT**: Reads sensors, centers steering, moves forward, checks for open right/left to transition to `RIGHT`/`LEFT`.
-    - **CORREGIR_ANGULO**: Uses gyroscope to correct orientation if the angle is out of desired range.
-    - (Others: STOPPED, ESQUINA)
+    - **INICIAL**: Sets up, moves forward slowly, transitions to `DECIDIR_SENTIDO` if an obstacle is detected ahead.
+    - **STRAIGHT**: Moves forward, keeps centered in the corridor using lateral corrections, and transitions to `SENTIDO` if an obstacle is detected ahead and a direction has already been chosen.
+    - **DECIDIR_SENTIDO**: Decides whether to turn left or right at an intersection based on comparing left/right distances, sets `sentido`, and transitions to the appropriate turn state.
+    - **GIROLEFT/GIRORIGHT**: Executes left or right turn sequence, then transitions to `STRAIGHT`.
+    - **SENTIDO**: If `sentido` is set, transitions to the corresponding turn state.
+    - **STOPPED**: Stops the robot.
+    - **Default**: Stops the robot.
+
+#### c. Correction and Maneuver Logic
+
+- **Dynamic centering**: If robot is too close or too far from the left/right wall, makes small corrections (via `straightDer`, `straightIzq`) to re-center.
+- **Decision-making**: At intersections, compares readings to decide which direction to turn and executes the appropriate maneuver, updating `sentido`.
 
 ---
 
-## 6. Key Functions
+### 6. Key Functions
 
 - **Movement**
     - `avanza(int speed)`: Move forward.
@@ -245,54 +254,53 @@ The code uses a state machine (`CarState`) to manage navigation behaviors, inclu
     - `girarizq()`: Turn servo left.
     - `centrado()`: Center the steering.
 - **Sensor Reading**
-    - `readUltrasonicSensors()`: Acquire all sensor data and handle out-of-range readings.
+    - `readUltrasonicSensors()`: Reads and filters all sensor data.
+    - `filtrarUltrasonicos(NewPing &sonar)`: Takes multiple samples, discards extreme values, and averages to produce a robust distance reading.
 - **Encoder Management**
     - `updateEncoderDistance()`: Calculate and store distance traveled.
 - **Corrections and Maneuvers**
-    - `paredizq()`, `paredder()`: Wall following/turning with encoder update.
+    - `paredizq()`, `paredder()`: Wall following/turning.
     - `straightDer()`, `straightIzq()`: Small corrections to maintain centering.
-- **Gyroscope**
-    - `giroscopio()`: Reads and prints gyroscope angular velocity data.
-    - Used in `CORREGIR_ANGULO` state to maintain desired orientation.
 
 ---
 
-## 7. Example: Gyroscope Angle Correction
+### 7. Example: Ultrasonic Filtering Function
 
 ```cpp
-case CORREGIR_ANGULO: {
-    int gx, gy, gz;
-    sensor.getRotation(&gx, &gy, &gz);
-    int angulo = gz;
-    if (angulo < 40) {
-        girarder();
-        delay(30);
-        sensor.getRotation(&gx, &gy, &gz);
-        angulo = gz;
-        if (angulo >= 40 && angulo <= 55) {
-            currentState = STRAIGHT;
-        }
-    } else if (angulo > 55) {
-        girarizq();
-        delay(30);
-        sensor.getRotation(&gx, &gy, &gz);
-        angulo = gz;
-        if (angulo >= 40 && angulo <= 55) {
-            currentState = STRAIGHT;
-        }
-    }
-    break;
+unsigned int filtrarUltrasonicos(NewPing &sonar) {
+  unsigned long sum = 0;
+  unsigned int minVal = MAX_DISTANCE;
+  unsigned int maxVal = 0;
+  int validCount = 0;
+
+  for (int i = 0; i < cantMuestras; i++) {
+    unsigned int dist = sonar.ping_cm();
+    if (dist == 0) dist = MAX_DISTANCE;
+    sum += dist;
+    if (dist < minVal) minVal = dist;
+    if (dist > maxVal) maxVal = dist;
+    validCount++;
+    delay(delayUltrasonicos);
+  }
+
+  if (validCount >= 3) {
+    sum -= minVal;
+    sum -= maxVal;
+    validCount -= 2;
+  }
+  if (validCount == 0) return MAX_DISTANCE;
+  return (unsigned int)(sum / validCount);
 }
 ```
 
 ---
 
-## 8. Usage Instructions
+### 8. Usage Instructions
 
-1. Open `CodigoDeluxe2_2.ino` in the Arduino IDE.
-2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder, Wire, MPU6050).
+1. Open `CodigoDeluxe2_6.ino` in the Arduino IDE.
+2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
 3. Connect hardware per the pin configuration.
-4. Upload the code to the Arduino Mega 2560.
+4. Upload the code to the Arduino.
 5. Power on the robot and observe autonomous operation.
 
 ---
