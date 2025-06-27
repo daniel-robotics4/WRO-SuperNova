@@ -33,7 +33,9 @@ The Project
 ===
 Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
 
-The core of the system is based on the Arduino Mega 2560 microcontroller, which offers ample input/output pins and processing power to handle multiple sensors and actuators simultaneously. The vehicle integrates a DC motor equipped with an encoder to provide precise feedback on wheel rotation, enabling closed-loop speed and distance control. Four ToF sensors are strategically mounted to provide comprehensive environmental awareness by measuring distances to obstacles in front and on both sides of the vehicle. A motor driver shield manages power delivery and control signals to the motor, while a servomotor is used to actuate steering,the chasis made for this vehicle was made from scratch in a 3d tool an then printed
+The core of the system is based on the Arduino Uno microcontroller, which provides a versatile platform with sufficient input/output pins and processing capability to manage multiple sensors and actuators for basic robotics applications. The vehicle features a DC motor equipped with an encoder, allowing for precise feedback on wheel rotation to enable closed-loop speed and distance control. Four ultrasonic sensors are strategically mounted to the vehicle, giving comprehensive environmental awareness by measuring distances to obstacles in front and on both sides. A motor driver shield is used to manage power delivery and control signals to the motor, while a servomotor handles steering actuation. The chassis for this vehicle was custom-designed using 3D modeling software and subsequently fabricated with a 3D printer.
+
+
 
 ## The Challenge
 Teams are challenged to create, assemble, and program a robotic car that can drive itself around a racetrack that is dynamically altered for every round. There are two primary objectives in the competition: finishing laps with randomized obstacles and pulling off a flawless parallel parking manoeuvre. Teams must incorporate cutting-edge robotics ideas with an emphasis on innovation and dependability, such as computer vision, sensor fusion, and kinematics.
@@ -98,18 +100,19 @@ It is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper
 The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
 
 ### Power and Sense Management
-**Arduino Mega 2560:**
+**Arduino uno:**
 | Specifications: |
 | ------------- |
-| Microcontroller: ATmega2560 | 
-| Flash memory: 256 kB |
-| SRAM: 8 kB |
+| Microcontroller: ATmega328p | 
+| Flash memory: 32 kB |
+| SRAM: 2 kB |
 | Frequency: 16 MHz |
-| Pins: 56 |
+| Pins: 20 |
 | Input voltage: 5V  |
- ![mega 2](https://github.com/user-attachments/assets/795966a0-d3ef-4f3b-9485-fe8bbaa3a449)
+![Arduino_Uno_-_R3](https://github.com/user-attachments/assets/710c520a-b1d3-406b-b68a-45a188125aac)
+
  
-Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements.
+The Arduino Uno is a microcontroller board based on the ATmega328P. It features 14 digital input/output pins (6 of which can be used as PWM outputs), 6 analog inputs, a 16 MHz crystal oscillator, USB connection, power jack, ICSP header, and a reset button. The Arduino Uno houses the code that enables the system to accomplish its tasks by processing sensor data and controlling the vehicle’s movements accordingly.
 
 **Ultrasonic Sensor (hc-sr04):**
 | Specifications: |
