@@ -16,7 +16,7 @@ This repository contains the documentation for the SuperNova team's robot for th
     - Motor driver shield (L293)
   - [Power and Sense Management](#power-and-sense-management)
     - Arduino Mega 2560
-    - ToF laser sensors
+    - Ultrasonic sensors (hc-sr04)
     - 18650 Battery
     - Pixy Cam v2
  - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe1_9ino)
