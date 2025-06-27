@@ -119,6 +119,7 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 | Resolution:  0.3 cm |
 | Input voltage: 5V  |
 | Operating Current: 15mA |
+![Ultrasonic_Sensor](https://github.com/user-attachments/assets/ff7ceb5b-2965-475b-acc6-ad80540a37db)
 
 
 It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
