@@ -76,6 +76,8 @@ This challenge emphasizes all aspects of the engineering process, including:
 
 The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (c!
 hannels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
+We used these motors for their balance between power, efficiency, and cost, as well as their easy integration with common motor drivers like the L298N.
+
 
 **Servo Motor MG995:**
 | Specifications: |
@@ -87,6 +89,7 @@ hannels A and B) that indicate the rotation direction and speed by measuring the
 
 
 A servomotor is integrated into the system to control steering. The servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. The servo’s position is controlled programmatically to perform smooth and accurate movements.
+We chose this servo for its precise position control, ease of use with Arduino libraries, and widespread availability, offering better accuracy and reliability than cheaper or less-documented servos.
 
 **Motor driver shield (L293):**
 | Specifications: |
@@ -98,6 +101,7 @@ A servomotor is integrated into the system to control steering. The servo receiv
 
 It is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
 The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
+The L298N was selected because it can control two motors simultaneously, is robust, and works seamlessly with Arduino, unlike more complex or less compatible drivers.
 
 ### Power and Sense Management
 
@@ -115,6 +119,7 @@ The motor driver shield is designed to handle the power requirements of the DC m
 
 
 Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements
+We selected the Arduino MEGA for its user-friendly interface, extensive community support, and broad compatibility with various sensors and actuators, making development easier than with less-documented boards.
 
 **Ultrasonic Sensor (hc-sr04):**
 | Specifications: |
@@ -128,7 +133,7 @@ Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54
 
 
 It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
-
+This sensor was chosen for its accuracy, low cost, and readily available documentation, outperforming other more expensive or less reliable distance-sensing options.
 
 **18650 Battery:**
 | Specifications: |
@@ -157,6 +162,7 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 ![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
 The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
+ We selected this camera for its high-resolution image capture, easy interfacing with microcontrollers, and strong community support, providing superior performance and documentation compared to less common camera modules.
 
 
 **Voltaje Regulator (Lm2596) :**
@@ -167,8 +173,7 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 | Energy eficiency : 80% |
 ![voltage regulator](https://github.com/user-attachments/assets/7e0a2466-8ae1-4540-9adb-790cd3f9cec8)
 
-The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output 
-
+The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output
 
 
 ## Software/Code Documentation – `CodigoDeluxe2_6.ino`
