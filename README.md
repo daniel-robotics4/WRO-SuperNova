@@ -50,11 +50,11 @@ This challenge emphasizes all aspects of the engineering process, including:
 
 | Front view | Back view | Left view | 
 | ------------- |------------- | ------------- |
-|![DELTA front](https://github.com/user-attachments/assets/37a291b3-2074-4cc4-9628-6d25076077c3)|![DELTA back](https://github.com/user-attachments/assets/f7437120-5ef7-4e59-80dd-d65c5fc95d8d)|![delta left](https://github.com/user-attachments/assets/6ff604bb-370f-42d3-ae5e-385f7e50b24d) |
+|![DELTA Front (2)](https://github.com/user-attachments/assets/ec1907cf-924b-4a97-a66a-a97e13b13e6b) | ![DELTA Back (2)](https://github.com/user-attachments/assets/1984527a-ac2f-4910-8568-b0b8261cf26b) |![DELTA Left (2)](https://github.com/user-attachments/assets/ab908c82-4331-4858-b076-f0b3fae6ab12) |
 
 | Right view | Top view | Bottom view |
 | ------------- | ------------- |------------- |
-|![DELTA right](https://github.com/user-attachments/assets/df51e0d2-e79f-4c43-a7e4-7354724a193e)|![DELTA top](https://github.com/user-attachments/assets/9fcd98e8-019f-4f3a-8752-4e90184c991b)|![DELTA bottom](https://github.com/user-attachments/assets/6b381bab-34fb-445d-84d1-24efc51fd2fd)|
+|![DELTA Right (2)](https://github.com/user-attachments/assets/5a26582e-ae10-4d31-b908-bc338e45cba6) |![DELTA Top (2)](https://github.com/user-attachments/assets/783a9b18-8fbb-4627-ba59-00626b973e42) |![DELTA Bottom (2)](https://github.com/user-attachments/assets/70207e10-3013-434b-9543-bd5aeed7624e) |
 
 
 ## Management
