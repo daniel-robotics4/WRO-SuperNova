@@ -176,6 +176,8 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output
 
 
+
+
 # Software/Code Documentation – `CodigoDeluxe3_5.ino`
 
 This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe3_5.ino` in the WRO-SuperNova project.
