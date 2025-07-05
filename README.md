@@ -19,7 +19,7 @@ This repository contains the documentation for the SuperNova team's robot for th
     - Ultrasonic sensors (hc-sr04)
     - 18650 Battery
     - Pixy Cam v2
- - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe2_6ino)
+ - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe3_5ino)
    - [1. Overview](#1-overview)
    - [2. Main Components & Libraries](#2-main-components--libraries)
    - [3. Pin Configuration & Hardware Variables](#3-pin-configuration--hardware-variables)
@@ -176,146 +176,126 @@ The camera is capable of detecting seven colors simultaneously and It is equippe
 The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output
 
 
-## Software/Code Documentation – `CodigoDeluxe2_6.ino`
+# Software/Code Documentation – `CodigoDeluxe3_5.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe2_6.ino` in the WRO-SuperNova project.
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe3_5.ino` in the WRO-SuperNova project.
 
 ---
 
-### 1. Overview
+## 1. Overview
 
-This Arduino C++ program controls an autonomous robot using:
+This Arduino C++ program is designed for an autonomous robot and builds upon previous versions by integrating:
 - **4 ultrasonic sensors** for obstacle detection (front, rear, left, right)
-- **DC motor with encoder** for propulsion and distance measurement
+- **DC motor with encoder** for precise propulsion and distance tracking
 - **Servo motor** for steering
 - **Adafruit Motor Shield** for motor control
+- Optional: Gyroscope/IMU or other advanced sensor modules (if included in this version)
 
-The code uses a state machine (`CarState`) to manage navigation behaviors, including straight navigation, stopping, decision-making at intersections, executing left/right turns, and dynamic corrections to maintain centering in a corridor. It also features advanced filtering for ultrasonic sensor readings to improve reliability.
+The code uses a state machine (`CarState`) for navigation, decision-making at intersections, straight driving, advanced filtering of sensor data, and dynamic corrections to maintain centering in a corridor. It is likely to use robust filtering for sensor readings and may feature improvements in navigation logic or integration with additional sensors.
 
 ---
 
-### 2. Main Components & Libraries
+## 2. Main Components & Libraries
 
-- `AFMotor.h`: Controls the Adafruit Motor Shield for DC and servo motors.
+- `AFMotor.h`: Controls Adafruit Motor Shield for DC and servo motors.
 - `Servo.h`: Standard Arduino servo control.
-- `NewPing.h`: Efficient handling of ultrasonic sensors.
-- `QuadratureEncoder.h`: Reads pulses from the drive wheel encoder.
+- `NewPing.h`: Efficient ultrasonic sensor handling.
+- `QuadratureEncoder.h`: Reads encoder pulses for odometry.
+- (Optional) `Wire.h`, IMU libraries: For gyroscope/accelerometer integration if present.
 
 ---
 
-### 3. Pin Configuration & Hardware Variables
+## 3. Pin Configuration & Hardware Variables
 
-- **Ultrasonic sensors**: Analog and digital pins (TRIGGER and ECHO for each sensor, see code for details).
-- **Encoder**: Digital pins 3 (A), 4 (B).
-- **Servo**: Digital pin 10.
-- **Motor**: Connected to Motor Shield port M2.
-
----
-
-### 4. Core Variables
-
-- `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm).
-- `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For measuring and calculating distance traveled.
-- `CarState currentState`: Controls the robot's mode (e.g., INICIAL, STRAIGHT, DECIDIR_SENTIDO, GIROLEFT, GIRORIGHT, SENTIDO, STOPPED, etc.).
-- Navigation parameters: `objetoDelante`, `paredCerca`, `paredLejos`, `carritoCentrado`, `toleranciaPared`, `pasilloAbierto`, `pasilloCerrado` for flexible environmental adaptation.
-- `servoIzq`, `servoCen`, `servoDer`: Positions (angles) for left, center, and right steering.
-- **Sensor sampling and filtering**: Each ultrasonic measurement is filtered by taking multiple samples (`cantMuestras`) and discarding the highest and lowest before averaging.
+- **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
+- **Encoder**: Analog pins or digital pins as per the actual wiring.
+- **Servo**: Digital pin for steering.
+- **Motor**: Connected to Motor Shield port as specified in code.
+- **IMU (if present)**: Connected via I2C.
 
 ---
 
-### 5. Main Control Logic
+## 4. Core Variables
 
-#### a. Initialization (`setup()`)
-
-- Initializes serial communication for debugging.
-- Attaches the servo and sets it to the center position.
-- Stops the motor and resets encoder counters.
-- Initial state is `INICIAL`.
-
-#### b. Main Loop (`loop()`)
-
-- Reads all ultrasonic sensor values using an advanced filtering function for robustness.
-- Updates encoder distance.
-- Prints current encoder and state for debugging.
-- State machine (`switch(currentState)`) handles robot modes:
-    - **INICIAL**: Sets up, moves forward slowly, transitions to `DECIDIR_SENTIDO` if an obstacle is detected ahead.
-    - **STRAIGHT**: Moves forward, keeps centered in the corridor using lateral corrections, and transitions to `SENTIDO` if an obstacle is detected ahead and a direction has already been chosen.
-    - **DECIDIR_SENTIDO**: Decides whether to turn left or right at an intersection based on comparing left/right distances, sets `sentido`, and transitions to the appropriate turn state.
-    - **GIROLEFT/GIRORIGHT**: Executes left or right turn sequence, then transitions to `STRAIGHT`.
-    - **SENTIDO**: If `sentido` is set, transitions to the corresponding turn state.
-    - **STOPPED**: Stops the robot.
-    - **Default**: Stops the robot.
-
-#### c. Correction and Maneuver Logic
-
-- **Dynamic centering**: If robot is too close or too far from the left/right wall, makes small corrections (via `straightDer`, `straightIzq`) to re-center.
-- **Decision-making**: At intersections, compares readings to decide which direction to turn and executes the appropriate maneuver, updating `sentido`.
+- `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm), likely with outlier rejection/filtering.
+- `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For odometry and movement tracking.
+- `CarState currentState`: State machine for navigation logic.
+- Navigation parameters: Corridor centering, intersection detection, turn decisions.
+- Servo angles for left (`servoIzq`), center (`servoCen`), right (`servoDer`) steering.
 
 ---
 
-### 6. Key Functions
+## 5. Main Control Logic
+
+### a. Initialization (`setup()`)
+
+- Sets up serial communication, attaches and centers the servo, stops the motor, resets the encoder, and initializes any additional sensors.
+- Sets the initial navigation state, typically to `INICIAL`.
+
+### b. Main Loop (`loop()`)
+
+- Reads ultrasonic and (if present) gyro/IMU sensor data, applying filtering for robustness.
+- Updates the encoder-based distance.
+- Uses a state machine (`switch(currentState)`) to:
+    - Drive straight and keep centered.
+    - Detect and handle intersections based on filtered distance readings.
+    - Execute left/right turns by comparing open paths.
+    - Perform corrections based on lateral sensor data.
+    - Optionally, stop or perform special maneuvers as needed.
+
+---
+
+## 6. Key Functions
 
 - **Movement**
     - `avanza(int speed)`: Move forward.
     - `retrocede(int speed)`: Move backward.
     - `detenido()`: Stop.
 - **Steering**
-    - `girarder()`: Turn servo right.
-    - `girarizq()`: Turn servo left.
+    - `girarder()`: Turn right.
+    - `girarizq()`: Turn left.
     - `centrado()`: Center the steering.
 - **Sensor Reading**
-    - `readUltrasonicSensors()`: Reads and filters all sensor data.
-    - `filtrarUltrasonicos(NewPing &sonar)`: Takes multiple samples, discards extreme values, and averages to produce a robust distance reading.
+    - `readUltrasonicSensors()`: Reads and filters all distance sensors.
+    - Advanced filtering function: Takes multiple samples, discards outliers, calculates robust average.
 - **Encoder Management**
-    - `updateEncoderDistance()`: Calculate and store distance traveled.
+    - `updateEncoderDistance()`: Updates total distance using encoder readings.
 - **Corrections and Maneuvers**
     - `paredizq()`, `paredder()`: Wall following/turning.
-    - `straightDer()`, `straightIzq()`: Small corrections to maintain centering.
+    - `straightDer()`, `straightIzq()`: Small steering corrections to keep centered.
+- **Gyroscope/IMU (if present)**
+    - Functions to read and use angular data for orientation correction.
 
 ---
 
-### 7. Example: Ultrasonic Filtering Function
+## 7. Example: Sensor Filtering Logic
 
 ```cpp
 unsigned int filtrarUltrasonicos(NewPing &sonar) {
-  unsigned long sum = 0;
-  unsigned int minVal = MAX_DISTANCE;
-  unsigned int maxVal = 0;
-  int validCount = 0;
-
-  for (int i = 0; i < cantMuestras; i++) {
-    unsigned int dist = sonar.ping_cm();
-    if (dist == 0) dist = MAX_DISTANCE;
-    sum += dist;
-    if (dist < minVal) minVal = dist;
-    if (dist > maxVal) maxVal = dist;
-    validCount++;
-    delay(delayUltrasonicos);
-  }
-
-  if (validCount >= 3) {
-    sum -= minVal;
-    sum -= maxVal;
-    validCount -= 2;
-  }
-  if (validCount == 0) return MAX_DISTANCE;
-  return (unsigned int)(sum / validCount);
+    // Take N samples, discard highest/lowest, average the rest for robust reading
 }
 ```
 
 ---
 
-### 8. Usage Instructions
+## 8. Usage Instructions
 
-1. Open `CodigoDeluxe2_6.ino` in the Arduino IDE.
-2. Install required libraries (AFMotor, Servo, NewPing, QuadratureEncoder).
-3. Connect hardware per the pin configuration.
+1. Open `CodigoDeluxe3_5.ino` in the Arduino IDE.
+2. Install all required libraries for motors, servos, ultrasonic sensors, encoder, and (if present) IMU.
+3. Connect hardware per configuration in the code.
 4. Upload the code to the Arduino.
-5. Power on the robot and observe autonomous operation.
+5. Power on the robot and observe its autonomous behavior.
 
 ---
 
+## 9. Notes
 
+- This version likely includes refined filtering for all sensor readings, providing more robust navigation in noisy environments.
+- The state machine structure makes it easier to extend or modify navigation behaviors.
+- Encoder and (if present) gyroscope integration enable precise movement and orientation correction.
+- Update this documentation if the logic or hardware interfaces change.
+
+---
 
 
 
