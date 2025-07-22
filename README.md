@@ -13,12 +13,14 @@ This repository contains the documentation for the SuperNova team's robot for th
   - [Mobility Management](#mobility-management)
     - Motor DC 12v with encoder
     - Servo Motor 9g
-    - Motor driver shield (L293)
+    - Module l298n motor driver
   - [Power and Sense Management](#power-and-sense-management)
-    - Arduino Mega 2560
+    - ESP32 DevKit v1
+    - ESP32 expansion board
     - Ultrasonic sensors (hc-sr04)
     - 18650 Battery
     - Pixy Cam v2
+    - Voltage regulator
  - [Software/Code Documentation](#softwarecode-documentation--codigodeluxe3_5ino)
    - [1. Overview](#1-overview)
    - [2. Main Components & Libraries](#2-main-components--libraries)
@@ -91,7 +93,7 @@ We used these motors for their balance between power, efficiency, and cost, as w
 A servomotor is integrated into the system to control steering. the servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. the servo’s position is controlled programmatically to perform smooth and accurate movements.
 We chose this servo for its precise position control, ease of use with Arduino libraries, and widespread availability, offering better accuracy and reliability than cheaper or less-documented servos.
 
-**module l298n motor driver:**
+**Module l298n motor driver:**
 | Specifications: |
 | ------------- |
 | Power supply voltage: 5 to 35V  |
