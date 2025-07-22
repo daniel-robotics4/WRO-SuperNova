@@ -184,7 +184,15 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 the camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
  We selected this camera for its high-resolution image capture, easy interfacing with microcontrollers, and strong community support, providing superior performance and documentation compared to less common camera modules.
 
+**Voltaje Regulator (Lm2596) :**
+| Specifications: |
+| ------------- |
+| Input Voltage: 4V to 35V |
+| Output Voltage:  1.23V to 37V |
+| Energy eficiency : 80% |
+![voltage regulator](https://github.com/user-attachments/assets/7e0a2466-8ae1-4540-9adb-790cd3f9cec8)
 
+The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output 
 
 # Software/Code Documentation – `CodigoDeluxe3_5.ino`
 
