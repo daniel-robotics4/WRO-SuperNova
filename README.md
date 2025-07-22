@@ -2,12 +2,12 @@ SuperNova
 ====
 ![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
 
-This repository contains the documentation for the SuperNova team's robot for the 2025 World Robot Olympiad Future Engineers competition. The robot, was designed and built by a team of three students.
+This repository contains the documentation for the SuperNova team's robot for the 2025 World Robot Olympiad Future Engineers competition. the robot, was designed and built by a team of three students.
 
 # Index
 
-- [The Project](#the-project)
-- [The Challenge](#the-challenge)
+- [the Project](#the-project)
+- [the Challenge](#the-challenge)
 - [Photos of DELTA](#photos-of-delta)
 - [Management](#management)
   - [Mobility Management](#mobility-management)
@@ -29,16 +29,16 @@ This repository contains the documentation for the SuperNova team's robot for th
    - [7. Example: Event Handling Logic](#7-example-event-handling-logic)
    - [8. Usage Instructions](#8-usage-instructions)
 
-The Project
+the Project
 ===
-Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. The vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
+Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. the vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
 
-The core of the system is based on the Arduino Mega microcontroller, which provides a versatile platform with sufficient input/output pins and processing capability to manage multiple sensors and actuators for basic robotics applications. The vehicle features a DC motor equipped with an encoder, allowing for precise feedback on wheel rotation to enable closed-loop speed and distance control. Four ultrasonic sensors are strategically mounted to the vehicle, giving comprehensive environmental awareness by measuring distances to obstacles in front and on both sides. A motor driver shield is used to manage power delivery and control signals to the motor, while a servomotor handles steering actuation. The chassis for this vehicle was custom-designed using 3D modeling software and subsequently fabricated with a 3D printer.
+the core of the system is based on the Arduino Mega microcontroller, which provides a versatile platform with sufficient input/output pins and processing capability to manage multiple sensors and actuators for basic robotics applications. the vehicle features a DC motor equipped with an encoder, allowing for precise feedback on wheel rotation to enable closed-loop speed and distance control. Four ultrasonic sensors are strategically mounted to the vehicle, giving comprehensive environmental awareness by measuring distances to obstacles in front and on both sides. A motor driver shield is used to manage power delivery and control signals to the motor, while a servomotor handles steering actuation. the chassis for this vehicle was custom-designed using 3D modeling software and subsequently fabricated with a 3D printer.
 
 
 
-## The Challenge
-Teams are challenged to create, assemble, and program a robotic car that can drive itself around a racetrack that is dynamically altered for every round. There are two primary objectives in the competition: finishing laps with randomized obstacles and pulling off a flawless parallel parking manoeuvre. Teams must incorporate cutting-edge robotics ideas with an emphasis on innovation and dependability, such as computer vision, sensor fusion, and kinematics.
+## the Challenge
+Teams are challenged to create, assemble, and program a robotic car that can drive itself around a racetrack that is dynamically altered for every round. there are two primary objectives in the competition: finishing laps with randomized obstacles and pulling off a flawless parallel parking manoeuvre. Teams must incorporate cutting-edge robotics ideas with an emphasis on innovation and dependability, such as computer vision, sensor fusion, and kinematics.
 
 This challenge emphasizes all aspects of the engineering process, including:
 
@@ -74,7 +74,7 @@ This challenge emphasizes all aspects of the engineering process, including:
 
 
 
-The propulsion system relies on a DC motor paired with an encoder. The motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (c!
+the propulsion system relies on a DC motor paired with an encoder. the motor provides the mechanical force required to move the vehicle, while the encoder outputs two pulse signals (c!
 hannels A and B) that indicate the rotation direction and speed by measuring the number of pulses per revolution.
 We used these motors for their balance between power, efficiency, and cost, as well as their easy integration with common motor drivers like the L298N.
 
@@ -88,38 +88,56 @@ We used these motors for their balance between power, efficiency, and cost, as w
 ![617BvnN0VJL _SL1500_](https://github.com/user-attachments/assets/b501ca45-12d2-46de-9c1c-de0f9dc0fb90)
 
 
-A servomotor is integrated into the system to control steering. The servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. The servo’s position is controlled programmatically to perform smooth and accurate movements.
+A servomotor is integrated into the system to control steering. the servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. the servo’s position is controlled programmatically to perform smooth and accurate movements.
 We chose this servo for its precise position control, ease of use with Arduino libraries, and widespread availability, offering better accuracy and reliability than cheaper or less-documented servos.
 
-**Motor driver shield (L293):**
+**module l298n motor driver:**
 | Specifications: |
 | ------------- |
-| Power supply voltage: 4.5 to 25V  |
-| Output current: 1.2A (peak) |
-| Can handle: 4 DC motors or 2 stepper motors and 2 servo motors |
-![mtr cntrlr](https://github.com/user-attachments/assets/fd5479d2-4d84-43ed-bd1c-b6e060d37bcf)
+| Power supply voltage: 5 to 35V  |
+| Output current:  0-36mA |
+| Can handle:  DC motors or stepper motors |
+![modulo-l298n-driver-control-motor-puente-h-arduino-0](https://github.com/user-attachments/assets/50e4565b-47fe-46c2-a331-fc19f75f6467)
 
-It is a driver board based on L293 IC, which can drive 4 DC motors and 2 stepper or Servo motors at the same time. Each channel of this module has the maximum current of 1.2A and doesn't work if the voltage is more than 25v or less than 4.5v.
-The motor driver shield is designed to handle the power requirements of the DC motor and provide an easy interface for Arduino Mega. It accepts PWM signals for speed control and digital signals for motor direction, enabling forward and reverse movement. The shield includes built-in protection features such as current limiting and thermal shutdown to safeguard components during operation.
-The L298N was selected because it can control two motors simultaneously, is robust, and works seamlessly with Arduino, unlike more complex or less compatible drivers.
+the L298N is a robust dual H-bridge motor driver IC capable of controlling two DC motors simultaneously or one stepper motor. Each channel of the L298N can deliver up to 2A continuous current (with adequate heat dissipation) and operates within a voltage range of 5V to 35V, making it suitable for a wide range of motors.
+This motor driver module interfaces easily with the ESP32 microcontroller, accepting PWM signals from the ESP32 for precise speed control and digital signals for direction control, enabling both forward and reverse movement. the L298N module also includes built-in protection mechanisms such as current sensing and thermal shutdown to safeguard the system during operation.
+the L298N was selected for this project due to its ability to control two motors at once, its compatibility with the ESP32.
 
 ### Power and Sense Management
 
-**Arduino Mega 2560:**
+**ESP32 DevKit v1:**
 
 |Specifications:|
 | ------------ |
-|Microcontroller: ATmega2560 |
-|Flash memory: 256 kB |
-|SRAM: 8 kB | 
-|Frequency: 16 MHz |
-|Pins: 56 |
-|Input voltage: 5V |
-![mega 2](https://github.com/user-attachments/assets/88007b6f-bfa6-4737-894a-474db0262f06)
+|Microcontroller: ESP32 |
+|Flash memory: 4 Mb |
+|SRAM: 520 Kb | 
+|Frequency: 2.4 GHz to 2.5 GHz |
+|Input voltage: 2.7 – 3.6V |
+|Pins: 30 |
+![ModuloESP32-DEVKITV1-30pines-min_1_2048x2048](https://github.com/user-attachments/assets/efbd9da1-9a60-4602-9d2a-44219e70ab41)
+
+ESP32 DevKit V1:
+the ESP32 DevKit V1 is a microcontroller board based on the ESP32 SoC, featuring a dual-core Tensilica processor running at up to 240 MHz. It offers integrated Wi-Fi and Bluetooth, multiple digital input/output pins, analog inputs, PWM outputs, a micro-USB connection, onboard voltage regulator, and reset/boot buttons. the ESP32 board runs the code that enables us to accomplish the challenge, processing sensor data to perform the required movements.
+
+We selected the ESP32 DevKit V1 for its wireless connectivity, higher processing power, and compatibility with a wide range of sensors and actuators. Its user-friendly development environment, strong community support, and extensive documentation make it easier to implement complex robotics tasks compared to less-documented microcontroller boards.
 
 
-Arduino Mega 2560: Is a microcontroller board based on the ATmega2560. It has 54 digital input/output pins and 16 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. The arduino is the board that contains the code that allow us to accomplish the challenge, using the sensors data to make the necessary movements
-We selected the Arduino MEGA for its user-friendly interface, extensive community support, and broad compatibility with various sensors and actuators, making development easier than with less-documented boards.
+**ESP32 Expansion Base board v1:**
+
+|Specifications:|
+| ------------ |
+|Power supply: 5-12V|
+|On-board Regulator : 5V~1A |
+|SRAM: 520 Kb | 
+|Frequency: 2.4 GHz to 2.5 GHz |
+|Input voltage: 2.7 – 3.6V |
+![expansion board](https://github.com/user-attachments/assets/0ba4f354-1d29-45aa-8afe-bd514cc25211)
+
+the ESP32 Expansion Board V1 30P is an add-on board designed to extend the functionality of ESP32 development boards, featuring 30 accessible pins for easy connection to various peripherals. It provides organized access to multiple digital and analog inputs/outputs, power rails, and communication interfaces such as I2C, SPI, and UART. the expansion board simplifies prototyping by offering clearly labeled headers, additional power regulation options, and secure mounting for the ESP32 module, enabling robust connections for sensors, actuators, and external modules.
+
+We selected the ESP32 Expansion Board V1 30P for its convenient pin access, stable power distribution, and compatibility with a broad range of hardware components. Its well-organized layout, ease of integration, and community support streamline the development of complex robotics solutions, making it preferable to less modular expansion boards or direct wiring, which can lead to unreliable connections and increased troubleshooting.
+
 
 **Ultrasonic Sensor (hc-sr04):**
 | Specifications: |
@@ -161,20 +179,8 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 | Power input: 5V |
 ![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
-The camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
+the camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
  We selected this camera for its high-resolution image capture, easy interfacing with microcontrollers, and strong community support, providing superior performance and documentation compared to less common camera modules.
-
-
-**Voltaje Regulator (Lm2596) :**
-| Specifications: |
-| ------------- |
-| Input Voltage: 4V to 35V |
-| Output Voltage:  1.23V to 37V |
-| Energy eficiency : 80% |
-![voltage regulator](https://github.com/user-attachments/assets/7e0a2466-8ae1-4540-9adb-790cd3f9cec8)
-
-The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output
-
 
 
 
@@ -193,7 +199,7 @@ This Arduino C++ program is designed for an autonomous robot and builds upon pre
 - **Adafruit Motor Shield** for motor control
 - Optional: Gyroscope/IMU or other advanced sensor modules (if included in this version)
 
-The code uses a state machine (`CarState`) for navigation, decision-making at intersections, straight driving, advanced filtering of sensor data, and dynamic corrections to maintain centering in a corridor. It is likely to use robust filtering for sensor readings and may feature improvements in navigation logic or integration with additional sensors.
+the code uses a state machine (`CarState`) for navigation, decision-making at intersections, straight driving, advanced filtering of sensor data, and dynamic corrections to maintain centering in a corridor. It is likely to use robust filtering for sensor readings and may feature improvements in navigation logic or integration with additional sensors.
 
 ---
 
@@ -293,7 +299,7 @@ unsigned int filtrarUltrasonicos(NewPing &sonar) {
 ## 9. Notes
 
 - This version likely includes refined filtering for all sensor readings, providing more robust navigation in noisy environments.
-- The state machine structure makes it easier to extend or modify navigation behaviors.
+- the state machine structure makes it easier to extend or modify navigation behaviors.
 - Encoder and (if present) gyroscope integration enable precise movement and orientation correction.
 - Update this documentation if the logic or hardware interfaces change.
 
