@@ -306,14 +306,59 @@ unsigned int filtrarUltrasonicos(NewPing &sonar) {
 
 ---
 
-## 9. Notes
+# Cost Report
+## Components
+Component	Quantity	Cost per Unit (€)	Total (€)
+| Componets | Component	Quantity  | Cost per Unit ($) | Total ($) |
+| ------------- | ------------- |------------- |------------- |
+| Motor DC GS20179-09 | 1 | 20.79 | 20.79 |
+| Servo Motor MG995 | 1 | 3.71 | 3.71 |
+| Module l298n motor driver | 1 | 4.99 | 4.99 |
+| ESP32 DevKit v1 | 1 | 15.99 | 15.99 |
+| ESP32 expansion board | 9.99 | 9.99 |
+| Ultrasonic sensors (hc-sr04) | 4 | 4.99 | 15.96 |
+| EBL 18650 Battery 3.7v 3300mha | 3 | 5.49 | 16.47 |
+| PixyCam v2 | 1 | 69.90 | 69.90 | 
+| Voltaje Regulator (Lm2596) | 1 | 4.52 | 4.52 | 
+| Wheels of 2.559 | 2 | 4.99 | 9.98 |   
+| 18650 3 battery holder | 1 | 1.99 | 1.99 |
+Total for Components: 174.29$
 
-- This version likely includes refined filtering for all sensor readings, providing more robust navigation in noisy environments.
-- the state machine structure makes it easier to extend or modify navigation behaviors.
-- Encoder and (if present) gyroscope integration enable precise movement and orientation correction.
-- Update this documentation if the logic or hardware interfaces change.
+## 3D Printing Costs
+Filament Used:
+Prototypes: 1.5 kg of PLA filament
+Final Parts: 250g of PLA filament
+PLA Filament Cost: 25.00 $  per 1kg
+| Filament Use | Weight (g)	| Cost ($) |
+| ------------- | ------------ | ----------- |
+| Prototypes | 1,500 | 45.00 | 
+| Final Parts	| 250 | 7.45 |
+Total for 3D Printing: 52.45$
 
----
+## Other Parts Tested
+Approximate Cost for Additional Parts Tested: 472.00$
+## Tools and Equipment
+| Tool | Cost ($) |
+| ---- | ---------|
+| Bambu Lab A1 mini 3D Printer | 299.00 |
+| Soldering iron | 11.99 |
+| Multimeter | 18.00 |
+| Miscellaneous Tools | 39.00 |
+Total for Tools and Equipment: 367.00$
+
+## Summary of Costs
+| Category | Total ($) | 
+| --------- | --------- | 
+| Components | 174.29 |
+| 3D Printing | 52.45 |
+| Other Parts Tested | 472.00 |
+| Tools and Equipment | 367.00 |
+| Shipping Approximation | 10.00 |
+Grand Total: 1.075,00
+
+*Note: Costs are approximate and based on current exchange rates and market prices.*
+
+
 
 
 
