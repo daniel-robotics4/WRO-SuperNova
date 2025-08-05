@@ -322,6 +322,7 @@ Component	Quantity	Cost per Unit (€)	Total (€)
 | Voltaje Regulator (Lm2596) | 1 | 4.52 | 4.52 | 
 | Wheels of 2.559 | 2 | 4.99 | 9.98 |   
 | 18650 3 battery holder | 1 | 1.99 | 1.99 |
+
 Total for Components: 174.29$
 
 ## 3D Printing Costs
@@ -333,6 +334,7 @@ PLA Filament Cost: 25.00 $  per 1kg
 | ------------- | ------------ | ----------- |
 | Prototypes | 1,500 | 45.00 | 
 | Final Parts	| 250 | 7.45 |
+
 Total for 3D Printing: 52.45$
 
 ## Other Parts Tested
@@ -344,6 +346,7 @@ Approximate Cost for Additional Parts Tested: 472.00$
 | Soldering iron | 11.99 |
 | Multimeter | 18.00 |
 | Miscellaneous Tools | 39.00 |
+
 Total for Tools and Equipment: 367.00$
 
 ## Summary of Costs
@@ -354,6 +357,7 @@ Total for Tools and Equipment: 367.00$
 | Other Parts Tested | 472.00 |
 | Tools and Equipment | 367.00 |
 | Shipping Approximation | 10.00 |
+
 Grand Total: 1.075,00
 
 *Note: Costs are approximate and based on current exchange rates and market prices.*
