@@ -553,8 +553,262 @@ PLA Filament Cost: 25.00 $  per 1kg
 
 *Note: Costs are approximate and based on current exchange rates and market prices.*
 
+# WRO SuperNova — Complete PLA Assembly, Wiring & Test Guide
 
+This is the single, canonical assembly guide for the SuperNova robot optimized for PLA printing. It covers everything from printing settings to mechanical assembly, wiring to the corrected firmware (ENB → GPIO13 PWM), safety, commissioning and troubleshooting — all in one place so you can follow it end-to-end.
 
+Use the repo images for reference during assembly:
+- other/Images of the readme/ModuloESP32-DEVKITV1-30pines-min_1_2048x2048.jpg
+- other/Images of the readme/Base expansora para ESP32.jpg
+- other/Images of the readme/Ultrasonic_Sensor.jpg
+- other/Images of the readme/pixy-v21-camera-sensor.jpg
+- other/Images of the readme/voltage regulator.jpg
+- v-photos/DELTA Top (2).jpeg and other DELTA photos for mechanical orientation
+
+Repository firmware this guide matches:
+- SuperNova_fixed_enb13_pwm.ino (firmware; motor EN on GPIO13 using LEDC PWM)
+
+---
+
+Table of contents
+1. Quick overview
+2. BOM 
+3. Tools
+4. PLA printing — settings & guidance (complete)
+5. Hole, insert & fastener strategy for PLA
+6. Part-specific print & post‑process notes
+7. Mechanical assembly — step‑by‑step (with wiring cues)
+8. Electrical wiring — pin-by-pin (match to code)
+9. Power, decoupling and protection
+10. Software, calibration & commissioning
+
+---
+
+1 — Quick overview
+This guide assumes you will print all robot mechanical parts in PLA. PLA works well for prototypes: good dimensional accuracy, stiff parts, and easy printing. This guide addresses PLA limitations (heat sensitivity, reduced screw-hold longevity) and gives methods to make a reliable robot while staying .
+
+Firmware/pin reference (already applied in the code you provided):
+- Motor DIR A → GPIO16
+- Motor DIR B → GPIO17
+- Motor EN (PWM) → GPIO13 (LEDC ch0, 0..255)
+- Servo signal → GPIO2 (MG995)
+- Encoder A/B → GPIO4 / GPIO5
+- Ultrasonics:
+  - Front TRIG/ECHO → GPIO12 / GPIO14
+  - Right TRIG/ECHO → GPIO33 / GPIO25
+  - Left TRIG/ECHO → GPIO27 / GPIO26
+  - Rear TRIG/ECHO → GPIO22 / GPIO23
+- Pixy2 → SPI recommended (3.3V Vcc); connect per Pixy docs
+
+---
+
+2 — Bill of Materials (PLA-focused)
+Mechanical (printed)
+- Robot CarDC V4 chasis .stl — bottom chassis
+- Chasis superior V2.stl — top cover
+- Direccionales Robot Chasis V4.stl — steering mounts / knuckles
+- MG995.stl (horn/bracket) or use the servo-supplied horn
+
+Electronics
+- ESP32 DevKit (30-pin)
+- Motor driver / expansion hat (H-bridge with separate VMOT and EN)
+- DC motor(s) and wheels
+- MG995 or similar servo
+- Pixy2 camera module
+- 4 × HC-SR04 ultrasonic sensors (or 3.3V-compatible alternative)
+- Wheel quadrature encoder (sensor + disk)
+- Power: motor battery (VMOT), servo 5–6V regulator/battery, 5V for ESP32 (USB/regulator)
+- Wiring: Dupont JST jumpers
+  
+Consumables & fasteners
+- M3 machine screws (assorted lengths) + M3 nuts (recommended)
+- Zip‑ties, foam tape, cable clips
+
+---
+
+3 — Tools
+- 3D printer (FDM) configured for PLA
+- Small screwdriver set (PH0/PH1), hex keys
+- Soldering iron + shrink tubing
+- Multimeter
+- Wire stripper/crimper, pliers
+- Drill or reamer (3.0–3.2 mm) for hole finishing
+- Heat gun/hot air or soldering iron for low-temp insert installation (use with care)
+- Calipers for dimensional checks
+
+---
+
+4 — PLA printing — complete settings & guidance
+
+Printer nozzle & bed
+- Nozzle: 0.4 mm
+- Bed: PEI, glass or taped bed works fine
+- Nozzle temp: 200–210 °C (start 205 °C; tune by filament)
+- Bed temp: 55–60 °C
+- Fan: 100% after first 2–3 layers
+
+Layer & perimeters
+- Layer height: 0.16–0.20 mm (0.12 mm for small high-detail pivots)
+- Perimeters: 3–4 (4 recommended for chassis and load zones)
+- Top/bottom layers: 6
+
+Infill
+- Chassis & load-bearing parts: 35–40% gyroid or grid
+- Brackets/covers: 15–25%
+- Pivot/knuckle areas: 30–40%
+
+Speeds & retraction
+- Print speed: 40–50 mm/s
+- Perimeter speed: 30–40 mm/s for stronger walls
+- Retraction: Bowden 4–6 mm / Direct 0.8–1.2 mm; retraction speed 25–40 mm/s
+
+Adhesion & supports
+- Brim: 3–8 mm for large chassis parts
+- Supports: tree supports for overhangs; minimize contact with cosmetic surfaces
+- First layer: 20–25 mm/s, slightly higher extrusion multiplier if needed
+
+Slicer tuning tips
+- Use 4 perimeters for screw bosses; enable “pause after layer” if you want to embed nuts mid-print.
+- Turn on “Z hop” only if needed; it can reduce small scuffs.
+- Enable “coast at end” and “retraction in wipe” if stringing appears.
+
+Cooling & warping
+- PLA benefits from active cooling; ensure 100% fan once layers are stable.
+- For long prints, avoid drafts or sudden ambient temp changes.
+
+---
+
+5 — Hole, insert & fastener strategy for PLA (complete)
+
+PLA characteristics
+- Stiff and dimensionally accurate, but more brittle and less heat-resistant than PETG.
+- Repeated screwing into raw PLA will wear threads.
+
+Recommended fastening approaches
+
+Hole prep
+- Print holes slightly undersized.
+- Ream or drill to 3.0–3.2 mm for M3 clearance if using machine screws with nuts.
+- For screws threading into PLA, pilot holes 2.6–2.8 mm are good for M3 self-tapping screws.
+
+---
+
+6 — Part-specific print & post‑process notes
+
+A) Main chassis — Robot CarDC V4 chasis .stl
+- Orientation: flat on the bed — largest surface down.
+- Settings: 0.16–0.20 mm layer, 4 perimeters, 40% infill, brim 5–8 mm.
+- Post: ream screw holes, remove any internal supports, chamfer screw entry slightly for easier insertion.
+
+B) Top cover — Chasis superior V2.stl
+- Orientation: as modeled for correct standoffs up.
+- Settings: 0.16–0.20 mm layer, 3 perimeters, 20% infill.
+- Post: test-fit standoffs and ESP32/devkit.
+
+C) Direccionales (steering) — Direccionales Robot Chasis V4.stl
+- Orientation: pivot holes vertical (hole axis along Z) for best circularity.
+- Settings: 0.12–0.16 mm layer for pivot detail, 4 perimeters around pivots, 30% infill.
+- Post: sand pivot bores lightly; test-fit bearings/bushings.
+
+D) Servo horn & bracket — MG995.stl
+- Orientation: horn flat on bed.
+- Settings: 0.12–0.16 mm layer, 4 perimeters, 30% infill.
+- Post: test fit on servo spline; if tight, sand minimally.
+
+E) Small clips/cable holders (if included)
+- Print with 3 perimeters, 15–25% infill; these can be thin and flexible.
+
+---
+
+7 — Mechanical assembly — step‑by‑step
+
+Preparation (before fastening)
+- Clean all prints, deburr, ream holes as needed, and gather hardware and electronics.
+- Label wires (TRIG/ECHO, motor, servo) with tape for easy routing.
+
+Assembly Steps
+1) Install motors into bottom chassis
+   - Mount motors in motor mounts; use M3 screws with nuts. Keep motor wire exit toward internal cavity for short routing.
+
+2) Mount wheel hubs
+   - Attach wheel hub; in
+
+3) Mount motor driver / expansion hat
+   - Place motor driver close to motors to minimize VMOT wiring.
+   - If using a stacked hat for ESP32, ensure orientation is correct and standoffs line up.
+
+4) Mount ESP32 DevKit
+   - Place ESP32 on standoffs; route header orientation per the repo ESP32 
+   - Secure with M2.5/M3 screws and nuts; use a captive nut if possible.
+
+5) Mount servo (MG995)
+   - Place servo in its bracket, secure with M3 screws.
+   - Attach horn matching steering arm and center servo before final tightening.
+
+6) Install ultrasonic sensors
+   - Insert HC‑SR04 modules into their cutouts with front facing outward.
+   - Secure with screws or double-sided tape; ensure sensor face is unobstructed.
+
+7) Mount Pixy2 camera
+   - Attach Pixy2 on front bracket; route its cable toward the ESP32/motor hat area.
+
+8) Connect encoder wires
+   - Route encoder A/B to GPIO4/GPIO5; keep wires short and twisted.
+
+9) Connect servo and sensors
+   - Route servo signal to GPIO2; servo Vcc to dedicated 5–6V supply (do not power servo from weak 5V regulators).
+
+10) Place top cover & fasten
+   - Close top cover, feed cables through designed channels, secure with screws (.
+
+11) Cable routing & strain relief
+   - Use zip ties; ensure no wires touch moving parts.
+   - Keep high-current motor wires separate from sensor wires.
+
+---
+
+8 — Electrical wiring — pin-by-pin (match to code)
+
+Pin mapping (final — matches SuperNova_fixed_enb13_pwm.ino):
+- Motor DIR A (IN1) ← GPIO16
+- Motor DIR B (IN2) ← GPIO17
+- Motor EN (PWM ENB) ← GPIO13 (LEDC ch0)
+- Servo signal ← GPIO2 (MG995)
+- Encoder A ← GPIO4
+- Encoder B ← GPIO5
+- HC-SR04 Front: TRIG → GPIO12, ECHO → GPIO14 (ECHO level-shifted)
+- HC-SR04 Right: TRIG → GPIO33, ECHO → GPIO25 (ECHO level-shifted)
+- HC-SR04 Left: TRIG → GPIO27, ECHO → GPIO26 (ECHO level-shifted)
+- HC-SR04 Rear: TRIG → GPIO22, ECHO → GPIO23 (ECHO level-shifted)
+- Pixy2: SPI recommended (MOSI/MISO/SCK/CS) — Pixy Vcc → 3.3V, GND → common GND
+
+Wiring rules
+- All grounds must be common: ESP32 GND, motor driver GND, servo GND, sensor GND.
+- Use JST connectors for sensors & servo where practical to make removal easy.
+- Keep TRIG lines short; ECHO lines should be level-shifted to 3.3V before ESP32.
+
+Motor driver wiring
+- VMOT (+) ← motor battery positive (include fuse)
+- VMOT GND ← motor battery negative
+- IN1 ← GPIO16; IN2 ← GPIO17; EN ← GPIO13 (PWM)
+- OUTA/OUTB ← motor terminals
+
+---
+
+9 — Power
+
+Power rails
+- Motor battery: choose voltage suitable for your motors (e.g., 7.4–12V). Ensure motor driver supports VMOT.
+- Servo rail: stable 5–6V capable of stall currents (MG995 can peak ~1–2A)
+- ESP32: USB 5V or a regulated 5V to VIN, will generate 3.3V internally
+
+---
+
+10 — Software, calibration & commissioning
+
+Firmware
+- Use the provided `CodigoDeluxe4_0.ino`.
+- Ensure you uploaded the corrected sketch (ENB on GPIO13).
 
 
 
