@@ -194,117 +194,285 @@ the camera is capable of detecting seven colors simultaneously and It is equippe
 
 The module LM2596 is a regulator step down that can reduce de voltage of input to a lower voltage in output 
 
-# Software/Code Documentation – `CodigoDeluxe3_5.ino`
+# Software/Code Documentation – `CodigoDeluxe4_0.ino`
 
-This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe3_5.ino` in the WRO-SuperNova project.
+This document describes the structure, logic, and key functions of the file: `src/CodigoDeluxe4_0.ino` in the WRO-SuperNova project.
+
+---
+# Open challenge 
+
+## High-level summary
+Firmware for an ESP32-based robot that:
+- Reads four ultrasonic sensors (front, right, left, rear) using the NewPing library.
+- Uses an ESP32 encoder for distance/tick measurements.
+- Controls a DC motor through two direction pins and an enable pin (ENB).
+- Uses a single servo for steering with three preset positions (left, center, right).
+- Implements a finite-state machine to drive, sense obstacles, decide turns, execute turns using encoder distances, and count laps.
 
 ---
 
-## 1. Overview
-
-This Arduino C++ program is designed for an autonomous robot and builds upon previous versions by integrating:
-- **4 ultrasonic sensors** for obstacle detection (front, rear, left, right)
-- **DC motor with encoder** for precise propulsion and distance tracking
-- **Servo motor** for steering
-- **Adafruit Motor Shield** for motor control
-- Optional: Gyroscope/IMU or other advanced sensor modules (if included in this version)
-
-the code uses a state machine (`CarState`) for navigation, decision-making at intersections, straight driving, advanced filtering of sensor data, and dynamic corrections to maintain centering in a corridor. It is likely to use robust filtering for sensor readings and may feature improvements in navigation logic or integration with additional sensors.
-
----
-
-## 2. Main Components & Libraries
-
-- `AFMotor.h`: Controls Adafruit Motor Shield for DC and servo motors.
-- `Servo.h`: Standard Arduino servo control.
-- `NewPing.h`: Efficient ultrasonic sensor handling.
-- `QuadratureEncoder.h`: Reads encoder pulses for odometry.
-- (Optional) `Wire.h`, IMU libraries: For gyroscope/accelerometer integration if present.
+## Includes and global objects
+- Libraries:
+  - `Arduino.h`, `WiFi.h`, `Pixy2.h`, `NewPing.h`, `ESP32Encoder.h`, `ESP32Servo.h`.
+- Global peripheral objects:
+  - `Pixy2 pixy;`
+  - `NewPing sonarRight(TRIGGER_PIN_RIGHT, ECHO_PIN_RIGHT, MAX_DISTANCE);` — right ultrasonic
+  - `NewPing sonarLeft(...)` — left ultrasonic
+  - `NewPing sonarFront(...)` — front ultrasonic
+  - `NewPing sonarRear(...)` — rear ultrasonic
+  - `Servo servo;` — steering servo
+  - `ESP32Encoder encoder(true);` — encoder instance (quadrature/direction enabled)
 
 ---
 
-## 3. Pin Configuration & Hardware Variables
-
-- **Ultrasonic sensors**: Digital pins (TRIGGER and ECHO for each sensor).
-- **Encoder**: Analog pins or digital pins as per the actual wiring.
-- **Servo**: Digital pin for steering.
-- **Motor**: Connected to Motor Shield port as specified in code.
-- **IMU (if present)**: Connected via I2C.
-
----
-
-## 4. Core Variables
-
-- `distanceFront`, `distanceRear`, `distanceLeft`, `distanceRight`: Distance readings from ultrasonic sensors (in cm), likely with outlier rejection/filtering.
-- `encoderTicks`, `wheelDiameter`, `wheelCircumference`, `ticksPerRevolution`, `totalDistanceTravelledCm`: For odometry and movement tracking.
-- `CarState currentState`: State machine for navigation logic.
-- Navigation parameters: Corridor centering, intersection detection, turn decisions.
-- Servo angles for left (`servoIzq`), center (`servoCen`), right (`servoDer`) steering.
-
----
-
-## 5. Main Control Logic
-
-### a. Initialization (`setup()`)
-
-- Sets up serial communication, attaches and centers the servo, stops the motor, resets the encoder, and initializes any additional sensors.
-- Sets the initial navigation state, typically to `INICIAL`.
-
-### b. Main Loop (`loop()`)
-
-- Reads ultrasonic and (if present) gyro/IMU sensor data, applying filtering for robustness.
-- Updates the encoder-based distance.
-- Uses a state machine (`switch(currentState)`) to:
-    - Drive straight and keep centered.
-    - Detect and handle intersections based on filtered distance readings.
-    - Execute left/right turns by comparing open paths.
-    - Perform corrections based on lateral sensor data.
-    - Optionally, stop or perform special maneuvers as needed.
+## Pin and constant definitions (as declared)
+- Motor:
+  - DIR_PIN_A = 16
+  - DIR_PIN_B = 17
+  - pinENB = 5
+- Ultrasonics:
+  - Right: TRIGGER 33, ECHO 25
+  - Left:  TRIGGER 27, ECHO 26
+  - Front: TRIGGER 12, ECHO 14
+  - Rear:  TRIGGER 22, ECHO 23
+- Servo pin: 2
+- Distances, thresholds and tuning variables:
+  - MAX_DISTANCE = 300
+  - servoL = 115, servoC = 80, servoR = 50
+  - frontObject = 90
+  - cantMuestras = 5 (samples per ultrasonic sensor read)
+  - DELAY_ULTRASONICOS = 10 (ms)
+  - wallfence = 20
+  - laps = 0
+  - sense = 0 (direction chosen during sensing: 1 or 2)
+  - maximumCorrections = 0
 
 ---
 
-## 6. Key Functions
-
-- **Movement**
-    - `avanza(int speed)`: Move forward.
-    - `retrocede(int speed)`: Move backward.
-    - `detenido()`: Stop.
-- **Steering**
-    - `girarder()`: Turn right.
-    - `girarizq()`: Turn left.
-    - `centrado()`: Center the steering.
-- **Sensor Reading**
-    - `readUltrasonicSensors()`: Reads and filters all distance sensors.
-    - Advanced filtering function: Takes multiple samples, discards outliers, calculates robust average.
-- **Encoder Management**
-    - `updateEncoderDistance()`: Updates total distance using encoder readings.
-- **Corrections and Maneuvers**
-    - `paredizq()`, `paredder()`: Wall following/turning.
-    - `straightDer()`, `straightIzq()`: Small steering corrections to keep centered.
-- **Gyroscope/IMU (if present)**
-    - Functions to read and use angular data for orientation correction.
+## Pixy2 helper
+- `getSignatureColorName(int signature)`
+  - Returns a human-readable name for a Pixy signature id.
+  - Cases: `1 -> "Verde"`, `2 -> "Rojo"`, default -> `"Desconocido"`.
+- (There are commented-out helper functions that format Pixy block data as HTML; they call `pixy.ccc.getBlocks()` and iterate `pixy.ccc.blocks` to extract signature, x/y/width/height.)
 
 ---
 
-## 7. Example: Sensor Filtering Logic
+## Ultrasonic functions
 
-```cpp
-unsigned int filtrarUltrasonicos(NewPing &sonar) {
-    // Take N samples, discard highest/lowest, average the rest for robust reading
-}
-```
+### filtrarUltrasonicos(NewPing &sonar)
+- Purpose: take multiple readings from a single NewPing sonar and return a filtered average distance in cm.
+- Behavior:
+  - Performs `cantMuestras` readings using `sonar.ping_cm()`.
+  - Treats `0` returned by `ping_cm()` as `MAX_DISTANCE`.
+  - Keeps running `sum`, tracks `minVal` and `maxVal`, and counts samples (`validCount`).
+  - After sampling, subtracts `minVal` and `maxVal` from `sum` (trim one min and one max) and divides by `validCount - 2` (if `validCount >= 3`) or `validCount` otherwise.
+  - Returns the computed average as `unsigned int`.
+- Notes on outputs: returns a value in cm bounded by `MAX_DISTANCE`.
+
+### readUltrasonicSensors()
+- Purpose: update global distances for all four ultrasonic sensors.
+- Behavior: calls `filtrarUltrasonicos()` for each sonar and stores results in:
+  - `distanceFront`, `distanceRight`, `distanceLeft`, `distanceRear`.
+- After reading, any zero distances are set to `MAX_DISTANCE` (safeguard).
 
 ---
 
-## 8. Usage Instructions
+## Servo helper functions
+- `servoRigth()` — write servo angle `servoR` (steer right) and short `delay(15)`.
+- `servoLeft()` — write servo angle `servoL` (steer left) and short `delay(15)`.
+- `servoCenter()` — write servo angle `servoC` (center steering) and short `delay(15)`.
 
-1. Open `CodigoDeluxe3_5.ino` in the Arduino IDE.
-2. Install all required libraries for motors, servos, ultrasonic sensors, encoder, and (if present) IMU.
-3. Connect hardware per configuration in the code.
-4. Upload the code to the Arduino.
-5. Power on the robot and observe its autonomous behavior.
+These functions position the steering servo to one of three predefined angles.
 
 ---
+
+## Motor control functions
+
+### setMotorDirection(bool forward)
+- Sets motor direction pins for forward or backward motion:
+  - If `forward == true`: DIR_PIN_A = LOW, DIR_PIN_B = HIGH.
+  - Else: DIR_PIN_A = HIGH, DIR_PIN_B = LOW.
+
+### stopMotor()
+- Stops the motor by setting DIR_PIN_A = LOW, DIR_PIN_B = LOW and pinENB = LOW.
+
+### MotorSpeed(bool direccion, int velocidad)
+- Calls `setMotorDirection(direccion)` to choose direction.
+- Writes `velocidad` to `pinENB` using `digitalWrite(pinENB, velocidad)`.
+- Intended to control motor speed and direction together.
+
+---
+
+## Encoder-based movement functions
+
+### EncoderForward(int encoderTicks)
+- Purpose: move forward until the encoder count reaches `encoderTicks`.
+- Behavior:
+  - Calls `encoder.clearCount()` to reset the encoder count.
+  - While `encoder.getCount() < encoderTicks`:
+    - Calls `MotorSpeed(true, 150)` to move forward.
+    - Delays 10 ms inside loop.
+  - Calls `stopMotor()` and `encoder.clearCount()` at the end.
+
+### EncoderBackward(int encoderTicks)
+- Purpose: move backward until the encoder count goes beyond `encoderTicks`.
+- Behavior:
+  - Calls `encoder.clearCount()`.
+  - While `encoder.getCount() > encoderTicks`:
+    - Calls `MotorSpeed(false, 150)` to move backward.
+    - Delays 10 ms inside loop.
+  - Calls `stopMotor()` and `encoder.clearCount()` at the end.
+
+Notes:
+- These functions use the encoder reading to control distances moved by repeated on/off motor commands until the encoder target is reached.
+
+---
+
+## Turn routines (composed actions)
+Each routine uses the encoder move functions and servo to perform a turn maneuver.
+
+- `Lbig()`:
+  - Calls `EncoderBackward(-700)` (back up),
+  - Calls `servoLeft()` (steer left),
+  - Calls `EncoderForward(1300)` (move forward the turn distance),
+  - Calls `servoCenter()` (re-center).
+
+- `Lsmall()`:
+  - Calls `EncoderBackward(-650)`,
+  - `servoLeft()`,
+  - `EncoderForward(1300)`,
+  - `servoCenter()`.
+
+- `Rbig()`:
+  - Calls `EncoderBackward(-700)`,
+  - `servoRigth()` (steer right),
+  - `EncoderForward(1300)`,
+  - `servoCenter()`.
+
+- `Rsmall()`:
+  - Calls `EncoderBackward(-650)`,
+  - `servoRigth()`,
+  - `EncoderForward(1300)`,
+  - `servoCenter()`.
+
+These routines perform: back up slightly, set steering to turn direction, move forward a fixed encoder distance to complete the turn, then re-center the servo.
+
+---
+
+## Small correction routines
+- `correctionL()`:
+  - Set servo to left,
+  - Call `MotorSpeed(true, 120)` to move forward briefly,
+  - `delay(200)`,
+  - `servoCenter()` and `delay(15)`.
+
+- `correctionR()`:
+  - Set servo to right,
+  - `MotorSpeed(true, 120)`,
+  - `delay(200)`,
+  - `servoCenter()` and `delay(15)`.
+
+These move the robot slightly forward while steering to perform small lateral corrections.
+
+---
+
+## backwardFinal()
+- Calls `Lbig()` if `sense == 1`.
+- Calls `Rbig()` if `sense == 2`.
+- Used as a final backup-and-turn routine when stopping.
+
+---
+
+## setup()
+- Initializes Serial at 115200.
+- Configures motor pins DIR_PIN_A, DIR_PIN_B, pinENB as OUTPUT.
+- Attaches servo on `servoPin` with pulse width range 500–2500 µs.
+- Initializes Pixy2: `pixy.init()`.
+- Configures encoder:
+  - Enables internal pull-ups: `ESP32Encoder::useInternalWeakPullResistors = puType::up`.
+  - Attaches encoder pins with `encoder.attachSingleEdge(4, 5)`.
+  - Clears encoder count `encoder.clearCount()`.
+- Initializes `lastStateChangeTime = millis()` (used for potential state timing).
+
+---
+
+## loop() and finite-state machine (FSM)
+`loop()` repeatedly:
+- Calls `readUltrasonicSensors()` to update distanceFront, distanceLeft, distanceRight, distanceRear.
+- Updates `encoderTicks = encoder.getCount()`.
+- Uses `switch(currentState)` to run the FSM. States:
+
+### START
+- Centers the servo.
+- Reads ultrasonic sensors.
+- Sets `sense = 0`.
+- Calls `MotorSpeed(true, 200)` to move forward.
+- If `distanceFront < frontObject` and `distanceFront != MAX_DISTANCE` and `sense == 0`:
+  - Calls `stopMotor()`.
+  - Sets `currentState = SENSE`.
+
+### SENSE
+- Decides turning direction by comparing lateral distances:
+  - If `distanceLeft < distanceRight`:
+    - Sets `sense = 2` (right) and `currentState = RIGHT`.
+  - If `distanceRight < distanceLeft`:
+    - Sets `sense = 1` (left) and `currentState = LEFT`.
+
+### RIGHT
+- If `laps < 11`:
+  - If `distanceLeft < 70` and `distanceLeft > 0`:
+    - `laps += 1; Rbig(); readUltrasonicSensors(); maximumCorrections = 0; currentState = STRAIGHT;`
+  - Else if `70 < distanceLeft < 100`:
+    - `laps += 1; Rsmall(); readUltrasonicSensors(); maximumCorrections = 0; currentState = STRAIGHT;`
+- Else if `laps >= 11`:
+  - `currentState = STOPPED`.
+
+### LEFT
+- Symmetric behavior to RIGHT but uses `distanceRight` for decisions:
+  - If `distanceRight < 70` and `distanceRight > 0` => `Lbig()` etc.
+  - If `70 < distanceRight < 100` => `Lsmall()` etc.
+  - If `laps >= 11` => `currentState = STOPPED`.
+
+### STRAIGHT
+- Calls `MotorSpeed(true, 70)` to drive forward at a slower speed.
+- Calls `readUltrasonicSensors()` then:
+  - If `distanceFront < frontObject` and `sense == 1` and `distanceFront > 50`:
+    - `currentState = LEFT`.
+  - If `distanceFront < frontObject` and `sense == 2` and `distanceFront > 50`:
+    - `currentState = RIGHT`.
+  - If `distanceFront < 10`:
+    - Decrements `laps`, moves backward for a short fixed time (`MotorSpeed(false, 200)` + `delay(1500)`), then stops motor.
+- Lateral corrections within STRAIGHT:
+  - If `distanceLeft < wallfence` and `maximumCorrections < 2`: increment `maximumCorrections` and call `correctionR()`.
+  - If `distanceRight < wallfence` and `maximumCorrections < 2`: increment `maximumCorrections` and call `correctionL()`.
+
+### STOPPED
+- Calls `backwardFinal()` (final backup & turn depending on `sense`).
+- Calls `stopMotor()`.
+- `delay(50000)` to remain stopped for a period.
+
+### default
+- Sets `currentState = STRAIGHT`.
+
+---
+
+## Variables involved in control flow
+- `currentState` (enum CarState): `START`, `STOPPED`, `SENSE`, `RIGHT`, `LEFT`, `STRAIGHT`.
+- `sense`: direction decision (1 = left, 2 = right, 0 = none).
+- `laps`: increments each time a corner/turn is executed; used to limit runs.
+- `maximumCorrections`: counter for lateral corrections applied while moving straight.
+
+---
+
+## How the pieces interact at runtime (short narrative)
+- The robot begins in `START`, moves forward, and monitors the front ultrasonic sensor.
+- When an obstacle is detected within `frontObject`, it transitions to `SENSE` and compares left/right distances to choose a turn direction (`sense`).
+- It executes the chosen turn (big or small) using encoder-based forward/backward moves combined with steering via servo.
+- After turning it enters `STRAIGHT` to follow the corridor, apply lateral corrections, and watch for the next obstacle to repeat the cycle.
+- `laps` is incremented on each corner; when a target number of laps is reached the FSM transitions to `STOPPED` and performs a final backup-and-turn before stopping.
+
+---
+
 
 # Cost Report
 ## Components
