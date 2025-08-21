@@ -553,7 +553,7 @@ PLA Filament Cost: 25.00 $  per 1kg
 
 *Note: Costs are approximate and based on current exchange rates and market prices.*
 
-# WRO SuperNova — Complete PLA Assembly, Wiring & Test Guide
+# WRO SuperNova — Complete Assembly and Wiring
 
 This is the single, canonical assembly guide for the SuperNova robot optimized for PLA printing. It covers everything from printing settings to mechanical assembly, wiring to the corrected firmware (ENB → GPIO13 PWM), safety, commissioning and troubleshooting — all in one place so you can follow it end-to-end.
 
@@ -566,7 +566,7 @@ Use the repo images for reference during assembly:
 - v-photos/DELTA Top (2).jpeg and other DELTA photos for mechanical orientation
 
 Repository firmware this guide matches:
-- SuperNova_fixed_enb13_pwm.ino (firmware; motor EN on GPIO13 using LEDC PWM)
+- CodigoDeluxe4_0.ino (firmware; motor EN on GPIO13 using LEDC PWM)
 
 ---
 
@@ -810,6 +810,11 @@ Firmware
 - Use the provided `CodigoDeluxe4_0.ino`.
 - Ensure you uploaded the corrected sketch (ENB on GPIO13).
 
+Note: To upload code from the Arduino IDE to an ESP32, first ensure the ESP32 board package is installed via the Boards Manager within the Arduino IDE.
+ Select the correct ESP32 board model from the Tools > Board menu and choose the appropriate COM port under Tools > Port.
+ For boards that do not enter flashing mode automatically, press and hold the BOOT button on the ESP32 while clicking the Upload button in the Arduino IDE; release the BOOT button once the upload process starts.
+ If the upload fails with a timeout error, try pressing the on-board RST or EN button when the IDE shows "Connecting..." in the output console.
+ After a successful upload, press the EN button to restart the ESP32 and run the new code.
 
 
 
