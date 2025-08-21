@@ -308,7 +308,7 @@ unsigned int filtrarUltrasonicos(NewPing &sonar) {
 
 # Cost Report
 ## Components
-Component	Quantity	Cost per Unit (€)	Total (€)
+Component	Quantity	Cost per Unit ($)	Total ($)
 | Componets | Component	Quantity  | Cost per Unit ($) | Total ($) |
 | ------------- | ------------- |------------- |------------- |
 | Motor DC GS20179-09 | 1 | 20.79 | 20.79 |
