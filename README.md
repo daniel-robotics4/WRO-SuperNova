@@ -1,4 +1,4 @@
-SuperNova 
+lo SuperNova 
 ====
 ![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
 
@@ -555,7 +555,7 @@ PLA Filament Cost: 25.00 $  per 1kg
 
 # WRO SuperNova — Complete Assembly and Wiring
 
-This is the single, canonical assembly guide for the SuperNova robot optimized for PLA printing. It covers everything from printing settings to mechanical assembly, wiring to the corrected firmware (ENB → GPIO13 PWM), safety, commissioning and troubleshooting — all in one place so you can follow it end-to-end.
+This is the single, canonical assembly guide for DELTA. It covers everything from printing settings to mechanical assembly, wiring to the corrected firmware (ENB → GPIO13 PWM), safety, commissioning and troubleshooting — all in one place so you can follow it end-to-end.
 
 Use the repo images for reference during assembly:
 - other/Images of the readme/ModuloESP32-DEVKITV1-30pines-min_1_2048x2048.jpg
@@ -566,7 +566,7 @@ Use the repo images for reference during assembly:
 - v-photos/DELTA Top (2).jpeg and other DELTA photos for mechanical orientation
 
 Repository firmware this guide matches:
-- CodigoDeluxe4_0.ino (firmware; motor EN on GPIO13 using LEDC PWM)
+- CodigoDeluxe4_0.ino
 
 ---
 
@@ -578,19 +578,19 @@ Table of contents
 5. Hole, insert & fastener strategy for PLA
 6. Part-specific print & post‑process notes
 7. Mechanical assembly — step‑by‑step (with wiring cues)
-8. Electrical wiring — pin-by-pin (match to code)
+8. Electrical wiring — pin-by-pin
 9. Power, decoupling and protection
 10. Software, calibration & commissioning
 
 ---
 
 1 — Quick overview
-This guide assumes you will print all robot mechanical parts in PLA. PLA works well for prototypes: good dimensional accuracy, stiff parts, and easy printing. This guide addresses PLA limitations (heat sensitivity, reduced screw-hold longevity) and gives methods to make a reliable robot while staying .
+This guide assumes you will print almost all robot mechanical parts in PLA. PLA works well for prototypes: good dimensional accuracy, stiff parts, and easy printing. This guide addresses PLA limitations (heat sensitivity, reduced screw-hold longevity) and gives methods to make a reliable robot while staying .
 
-Firmware/pin reference (already applied in the code you provided):
+Firmware/pin reference:
 - Motor DIR A → GPIO16
 - Motor DIR B → GPIO17
-- Motor EN (PWM) → GPIO13 (LEDC ch0, 0..255)
+- Motor EN (PWM) → GPIO1 
 - Servo signal → GPIO2 (MG995)
 - Encoder A/B → GPIO4 / GPIO5
 - Ultrasonics:
@@ -608,20 +608,21 @@ Mechanical (printed)
 - Chasis superior V2.stl — top cover
 - Direccionales Robot Chasis V4.stl — steering mounts / knuckles
 - MG995.stl (horn/bracket) or use the servo-supplied horn
+- faltan las ruedas
 
 Electronics
 - ESP32 DevKit (30-pin)
-- Motor driver / expansion hat (H-bridge with separate VMOT and EN)
-- DC motor(s) and wheels
+- Motor driver L298n
+- expansion board v1 for ESP32
+- DC motor with encoder and wheels
 - MG995 or similar servo
 - Pixy2 camera module
-- 4 × HC-SR04 ultrasonic sensors (or 3.3V-compatible alternative)
-- Wheel quadrature encoder (sensor + disk)
-- Power: motor battery (VMOT), servo 5–6V regulator/battery, 5V for ESP32 (USB/regulator)
+- 4 × HC-SR04 ultrasonic sensors 
+- Power: 18650 3000mh x3
 - Wiring: Dupont JST jumpers
   
 Consumables & fasteners
-- M3 machine screws (assorted lengths) + M3 nuts (recommended)
+- M3 machine screws (assorted lengths) + M3 nuts
 - Zip‑ties, foam tape, cable clips
 
 ---
@@ -713,10 +714,7 @@ C) Direccionales (steering) — Direccionales Robot Chasis V4.stl
 D) Servo horn & bracket — MG995.stl
 - Orientation: horn flat on bed.
 - Settings: 0.12–0.16 mm layer, 4 perimeters, 30% infill.
-- Post: test fit on servo spline; if tight, sand minimally.
-
-E) Small clips/cable holders (if included)
-- Print with 3 perimeters, 15–25% infill; these can be thin and flexible.
+- Post: test fit on servo spline; if tight, sand minimal.
 
 ---
 
@@ -727,18 +725,17 @@ Preparation (before fastening)
 - Label wires (TRIG/ECHO, motor, servo) with tape for easy routing.
 
 Assembly Steps
-1) Install motors into bottom chassis
-   - Mount motors in motor mounts; use M3 screws with nuts. Keep motor wire exit toward internal cavity for short routing.
+1) Install the motor into bottom chassis
+   - Mount motor in motor mount provided; use M3 screws with nuts. Keep motor wire exit toward the side for short routing.
 
-2) Mount wheel hubs
-   - Attach wheel hub; in
+2) Mount wheel hubs 
+   - falta descripción 
 
-3) Mount motor driver / expansion hat
-   - Place motor driver close to motors to minimize VMOT wiring.
-   - If using a stacked hat for ESP32, ensure orientation is correct and standoffs line up.
+3) Mount motor driver 
+   - Place motor driver close to motor to minimize VMOT wiring.
 
 4) Mount ESP32 DevKit
-   - Place ESP32 on standoffs; route header orientation per the repo ESP32 
+   - Place ESP32 on the expansion board/expansion hat in the designated place in the top layer.
    - Secure with M2.5/M3 screws and nuts; use a captive nut if possible.
 
 5) Mount servo (MG995)
@@ -750,7 +747,7 @@ Assembly Steps
    - Secure with screws or double-sided tape; ensure sensor face is unobstructed.
 
 7) Mount Pixy2 camera
-   - Attach Pixy2 on front bracket; route its cable toward the ESP32/motor hat area.
+   - Attach Pixy2 on front bracket; route its cable toward the ESP32 hat area.
 
 8) Connect encoder wires
    - Route encoder A/B to GPIO4/GPIO5; keep wires short and twisted.
@@ -758,8 +755,8 @@ Assembly Steps
 9) Connect servo and sensors
    - Route servo signal to GPIO2; servo Vcc to dedicated 5–6V supply (do not power servo from weak 5V regulators).
 
-10) Place top cover & fasten
-   - Close top cover, feed cables through designed channels, secure with screws (.
+10) Place top layer & fasten
+   - attach the top layer, secure with screws (.
 
 11) Cable routing & strain relief
    - Use zip ties; ensure no wires touch moving parts.
@@ -785,10 +782,9 @@ Pin mapping (final — matches SuperNova_fixed_enb13_pwm.ino):
 Wiring rules
 - All grounds must be common: ESP32 GND, motor driver GND, servo GND, sensor GND.
 - Use JST connectors for sensors & servo where practical to make removal easy.
-- Keep TRIG lines short; ECHO lines should be level-shifted to 3.3V before ESP32.
 
 Motor driver wiring
-- VMOT (+) ← motor battery positive (include fuse)
+- VMOT (+) ← motor battery positive 
 - VMOT GND ← motor battery negative
 - IN1 ← GPIO16; IN2 ← GPIO17; EN ← GPIO13 (PWM)
 - OUTA/OUTB ← motor terminals
@@ -798,9 +794,7 @@ Motor driver wiring
 9 — Power
 
 Power rails
-- Motor battery: choose voltage suitable for your motors (e.g., 7.4–12V). Ensure motor driver supports VMOT.
-- Servo rail: stable 5–6V capable of stall currents (MG995 can peak ~1–2A)
-- ESP32: USB 5V or a regulated 5V to VIN, will generate 3.3V internally
+- 3 3.7v 18650 batteries in parallel going to each regulator for its designated components 
 
 ---
 
