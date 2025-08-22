@@ -1,4 +1,4 @@
-lo SuperNova 
+SuperNova 
 ====
 ![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
 
@@ -585,12 +585,12 @@ Table of contents
 ---
 
 1 — Quick overview
-This guide assumes you will print almost all robot mechanical parts in PLA. PLA works well for prototypes: good dimensional accuracy, stiff parts, and easy printing. This guide addresses PLA limitations (heat sensitivity, reduced screw-hold longevity) and gives methods to make a reliable robot while staying .
+This guide assumes you will print almost all robot mechanical parts in PLA. PLA works well: good dimensional accuracy, stiff parts, and easy printing. This guide addresses PLA limitations (heat sensitivity, reduced screw-hold longevity) and gives methods to make a reliable robot while staying .
 
 Firmware/pin reference:
 - Motor DIR A → GPIO16
 - Motor DIR B → GPIO17
-- Motor EN (PWM) → GPIO1 
+- Motor EN (PWM) → GPIO13 
 - Servo signal → GPIO2 (MG995)
 - Encoder A/B → GPIO4 / GPIO5
 - Ultrasonics:
@@ -602,8 +602,8 @@ Firmware/pin reference:
 
 ---
 
-2 — Bill of Materials (PLA-focused)
-Mechanical (printed)
+2 — Bill of Materials 
+Mechanical
 - Robot CarDC V4 chasis .stl — bottom chassis
 - Chasis superior V2.stl — top cover
 - Direccionales Robot Chasis V4.stl — steering mounts / knuckles
@@ -619,7 +619,7 @@ Electronics
 - Pixy2 camera module
 - 4 × HC-SR04 ultrasonic sensors 
 - Power: 18650 3000mh x3
-- Wiring: Dupont JST jumpers
+- Wiring: JST jumpers
   
 Consumables & fasteners
 - M3 machine screws (assorted lengths) + M3 nuts
@@ -701,7 +701,7 @@ A) Main chassis — Robot CarDC V4 chasis .stl
 - Settings: 0.16–0.20 mm layer, 4 perimeters, 40% infill, brim 5–8 mm.
 - Post: ream screw holes, remove any internal supports, chamfer screw entry slightly for easier insertion.
 
-B) Top cover — Chasis superior V2.stl
+B) Top layer — Chasis superior V2.stl
 - Orientation: as modeled for correct standoffs up.
 - Settings: 0.16–0.20 mm layer, 3 perimeters, 20% infill.
 - Post: test-fit standoffs and ESP32/devkit.
@@ -728,7 +728,7 @@ Assembly Steps
 1) Install the motor into bottom chassis
    - Mount motor in motor mount provided; use M3 screws with nuts. Keep motor wire exit toward the side for short routing.
 
-2) Mount wheel hubs 
+2) Mount wheel hubs and steering module
    - falta descripción 
 
 3) Mount motor driver 
@@ -748,6 +748,7 @@ Assembly Steps
 
 7) Mount Pixy2 camera
    - Attach Pixy2 on front bracket; route its cable toward the ESP32 hat area.
+   - the Pixy needs a designated regulator for the 3.3V
 
 8) Connect encoder wires
    - Route encoder A/B to GPIO4/GPIO5; keep wires short and twisted.
@@ -766,7 +767,7 @@ Assembly Steps
 
 8 — Electrical wiring — pin-by-pin (match to code)
 
-Pin mapping (final — matches SuperNova_fixed_enb13_pwm.ino):
+Pin mapping:
 - Motor DIR A (IN1) ← GPIO16
 - Motor DIR B (IN2) ← GPIO17
 - Motor EN (PWM ENB) ← GPIO13 (LEDC ch0)
