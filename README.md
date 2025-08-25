@@ -619,7 +619,7 @@ Electronics
 - Pixy2 camera module
 - 4 × HC-SR04 ultrasonic sensors 
 - Power: 18650 3000mh x3
-- Wiring: JST jumpers
+- Wiring: DuPont jumper wires
   
 Consumables & fasteners
 - M3 machine screws (assorted lengths) + M3 nuts
