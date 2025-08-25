@@ -608,7 +608,7 @@ Mechanical
 - Chasis superior V2.stl — top cover
 - Direccionales Robot Chasis V4.stl — steering mounts / knuckles
 - MG995.stl (horn/bracket) or use the servo-supplied horn
-- faltan las ruedas
+- Ruedas V2.stl
 
 Electronics
 - ESP32 DevKit (30-pin)
