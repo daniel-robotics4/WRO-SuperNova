@@ -12,7 +12,7 @@ This repository contains the documentation for the SuperNova team's robot for th
 - [Management](#management)
   - [Mobility Management](#mobility-management)
     - Motor DC 12v with encoder
-    - Servo Motor 9g
+    - Servo Motor MG995
     - Module l298n motor driver
   - [Power and Sense Management](#power-and-sense-management)
     - ESP32 DevKit v1
@@ -21,8 +21,8 @@ This repository contains the documentation for the SuperNova team's robot for th
     - 18650 Battery
     - Pixy Cam v2
     - Voltage regulator
-- [Software/Code Documentation](#softwarecode-documentation--codigodeluxe4_0ino)
-  - [Open Challenge Firmware Explanation](#open-challenge-firmware-explanation)
+- [Software/Code Documentation – CodigoDeluxe4_0.ino](#softwarecode-documentation--codigodeluxe40ino)
+  - [Open challenge](#open-challenge)
     - [High-level summary](#high-level-summary)
     - [Includes and global objects](#includes-and-global-objects)
     - [Pin and constant definitions (as declared)](#pin-and-constant-definitions-as-declared)
@@ -53,7 +53,24 @@ This repository contains the documentation for the SuperNova team's robot for th
     - [Variables involved in control flow](#variables-involved-in-control-flow)
     - [How the pieces interact at runtime (short narrative)](#how-the-pieces-interact-at-runtime-short-narrative)
 - [Cost Report](#cost-report)
-  
+  - [Components](#components)
+  - [3D Printing Costs](#3d-printing-costs)
+  - [Other Parts Tested](#other-parts-tested)
+  - [Tools and Equipment](#tools-and-equipment)
+  - [Summary of Costs](#summary-of-costs)
+- [WRO SuperNova — Complete Assembly and Wiring](#wro-supernova--complete-assembly-and-wiring)
+  1. [Quick overview](#1--quick-overview)
+  2. [BOM](#2--bill-of-materials)
+  3. [Tools](#3--tools)
+  4. [PLA printing — settings & guidance (complete)](#4--pla-printing--complete-settings--guidance)
+  5. [Hole, insert & fastener strategy for PLA](#5--hole-insert--fastener-strategy-for-pla-complete)
+  6. [Part-specific print & post-process notes](#6--part-specific-print--postprocess-notes)
+  7. [Mechanical assembly — step-by-step](#7--mechanical-assembly--stepbystep)
+  8. [Electrical wiring — pin-by-pin](#8--electrical-wiring--pin-by-pin-match-to-code)
+  9. [Power, decoupling and protection](#9--power)
+  10. [Software, calibration & commissioning](#10--software-calibration--commissioning)
+
+
 the Project
 ===
 Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. the vehicle takes different paths depending on the color of the obstacle. We use an Arduino-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the Arduino circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
