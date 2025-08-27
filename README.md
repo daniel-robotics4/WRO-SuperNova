@@ -580,7 +580,7 @@ Use the repo images for reference during assembly:
 - other/Images of the readme/Ultrasonic_Sensor.jpg
 - other/Images of the readme/pixy-v21-camera-sensor.jpg
 - other/Images of the readme/voltage regulator.jpg
-- v-photos/DELTA Top (2).jpeg and other DELTA photos for mechanical orientation
+- v-photos/ The DELTA photos for mechanical orientation
 
 Repository firmware this guide matches:
 - CodigoDeluxe4_0.ino
