@@ -530,8 +530,9 @@ Component	Quantity	Cost per Unit ($)	Total ($)
 | Voltaje Regulator (Lm2596) | 1 | 4.52 | 4.52 | 
 | Wheels of 2.559 | 2 | 4.99 | 9.98 |   
 | 18650 3 battery holder | 1 | 1.99 | 1.99 |
+| DuPont cable jumper | 1 kit | 7.99 | 7.99 |
 
-**Total for Components: 174.29$**
+**Total for Components: 182.28$**
 
 ## 3D Printing Costs
 Filament Used:
@@ -566,7 +567,7 @@ PLA Filament Cost: 25.00 $  per 1kg
 | Tools and Equipment | 367.00 |
 | Shipping Approximation | 10.00 |
 
-**Grand Total: 1.075,00**
+**Grand Total: 1.082,99$**
 
 *Note: Costs are approximate and based on current exchange rates and market prices.*
 
