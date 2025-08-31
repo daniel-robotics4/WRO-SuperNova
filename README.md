@@ -130,7 +130,7 @@ We used these motors for their balance between power, efficiency, and cost, as w
 ![617BvnN0VJL _SL1500_](https://github.com/user-attachments/assets/b501ca45-12d2-46de-9c1c-de0f9dc0fb90)
 
 
-A servomotor is integrated into the system to control steering. the servo receives PWM signals from a dedicated Arduino Mega pin, allowing precise angular positioning between 0° and 180°. the servo’s position is controlled programmatically to perform smooth and accurate movements.
+A servomotor is integrated into the system to control steering. the servo receives PWM signals from a dedicated ESP32 pin, allowing precise angular positioning between 0° and 180°. the servo’s position is controlled programmatically to perform smooth and accurate movements.
 We chose this servo for its precise position control, ease of use with Arduino libraries, and widespread availability, offering better accuracy and reliability than cheaper or less-documented servos.
 
 **Module l298n motor driver:**
@@ -192,7 +192,7 @@ We selected the ESP32 Expansion Board V1 30P for its convenient pin access, stab
 ![Ultrasonic_Sensor](https://github.com/user-attachments/assets/ff7ceb5b-2965-475b-acc6-ad80540a37db)
 
 
-It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the Arduino Mega 2560 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
+It is a sensor that uses ultrasonic sounds to detect the bounce time of sound from one side to the other. Using the ESP32 devkit v1 we can determine the distance based on the time it takes for the wave to return, performing the function of determining when there is a wall nearby, and thus making the corresponding turn.
 This sensor was chosen for its accuracy, low cost, and readily available documentation, outperforming other more expensive or less reliable distance-sensing options.
 
 **18650 Battery:**
@@ -205,7 +205,7 @@ This sensor was chosen for its accuracy, low cost, and readily available documen
 | Size: 18 mm diameter, 65 mm length |
 ![image](https://github.com/user-attachments/assets/09afb713-b1cb-4bf8-b15b-2e0a06950587)
 
-we are going to use 3 of these li-ion batterys to power the vehicle with an 18650 battery holder. This battery configuration provides a reliable and efficient power source for the robot’s electronics and actuators, supporting extended operation during competition or testing.
+we are going to use 3 of these li-ion batterys in parallel to power the vehicle, with an 18650 battery holder. This battery configuration provides a reliable and efficient power source for the robot’s electronics and actuators, supporting extended operation during competition or testing.
 
 
 **PixyCam v2:**
@@ -221,7 +221,7 @@ we are going to use 3 of these li-ion batterys to power the vehicle with an 1865
 | Power input: 5V |
 ![pixy-v21-camera-sensor](https://github.com/user-attachments/assets/74f57132-97c9-4abd-84b3-dc63150acd27)
 
-the camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the Arduino to evade in the necessary way, depending on the obstacle colour.
+the camera is capable of detecting seven colors simultaneously and It is equipped with an internal processor, which lets us explore just the necessary information for the ESP32 to evade in the necessary way, depending on the obstacle colour.
  We selected this camera for its high-resolution image capture, easy interfacing with microcontrollers, and strong community support, providing superior performance and documentation compared to less common camera modules.
 
 **Voltaje Regulator (Lm2596) :**
