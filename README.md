@@ -1,4 +1,4 @@
-SuperNova 
+ SuperNova 
 ====
 ![supernova_final](https://github.com/user-attachments/assets/ad239977-581d-4c70-9d2d-63249994a8e1)
 
@@ -582,6 +582,7 @@ Use the repo images for reference during assembly:
 - other/Images of the readme/pixy-v21-camera-sensor.jpg
 - other/Images of the readme/voltage regulator.jpg
 - v-photos/ The DELTA photos for mechanical orientation
+- schemes/ use the schemes for cable orientation 
 
 Repository firmware this guide matches:
 - CodigoDeluxe4_0.ino
