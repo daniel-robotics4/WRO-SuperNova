@@ -513,6 +513,132 @@ These move the robot slightly forward while steering to perform small lateral co
 
 ---
 
+# Close challenge 
+
+## 1 — High-level summary
+This sketch runs on an ESP32 and coordinates a Pixy2 camera, four ultrasonic sensors (NewPing), a steering servo, an encoder, and a DC motor controlled by an H-bridge. The program implements a finite-state machine to search for colored blocks (green/red) using Pixy2 and execute preprogrammed maneuvers when colors are detected.
+
+Main flow: START → WALL → SEARCH → (GREEN or RED) → back to SEARCH or WALL. Flags `G` and `R` remember whether a maneuver for green or red has already been executed.
+
+---
+
+## 2 — Pin mapping
+- Motor:
+  - DIR_PIN_A = GPIO16
+  - DIR_PIN_B = GPIO17
+  - pinENB = GPIO32 (H-bridge enable / speed)
+- Servo:
+  - servoPin = GPIO2
+- Ultrasonic sensors (NewPing):
+  - Right TRIG / ECHO = GPIO33 / GPIO25
+  - Left TRIG / ECHO = GPIO27 / GPIO26
+  - Front TRIG / ECHO = GPIO13 / GPIO14
+  - Rear TRIG / ECHO = GPIO21 / GPIO34
+- Encoder:
+  - encoder.attachSingleEdge(4, 22) → channel A GPIO4, channel B GPIO22
+- Pixy2:
+  - object `pixy` used; blocks retrieved with `pixy.ccc.getBlocks()` and read via `pixy.ccc.blocks[]`
+
+---
+
+## 3 — Key variables and constants
+- Servo angles: `servoL = 115`, `servoC = 80`, `servoR = 50`
+- Ultrasonic parameters:
+  - `MAX_DISTANCE = 300` cm
+  - `cantMuestras = 5` samples per sensor
+  - `DELAY_ULTRASONICOS = 10` ms between pings
+  - `wallfence = 30` cm (distance considered "close" to a wall)
+  - `frontObject = 90` (front threshold referenced in other sketches)
+- Motion/encoder:
+  - `ppr = 1400` pulses per revolution (not directly used here)
+  - `laps`, `diameter` (context variables, not central here)
+- Color flags:
+  - `G` and `R` are 0/1 flags tracking green/red maneuvers
+- `sense` determines preferred turn direction during the WALL routine
+- `pixy.ccc.numBlocks` contains the number of color blocks detected by Pixy
+
+---
+
+## 4 — Main objects
+- `Pixy2 pixy` — camera block detection (color signatures)
+- `NewPing sonarRight/Left/Front/Rear` — ultrasonic sensors
+- `ESP32Encoder encoder(true)` — quadrature encoder counter
+- `Servo servo` — steering servo
+
+---
+
+## 5 — Important functions (what they do)
+
+### filtrarUltrasonicos(NewPing &sonar)
+- Takes `cantMuestras` readings with `sonar.ping_cm()`.
+- Replaces 0 with `MAX_DISTANCE`.
+- Sums values, discards min and max (if enough samples), and returns the averaged result.
+- Purpose: reduce spurious readings / outliers.
+
+### readUltrasonicSensors()
+- Calls `filtrarUltrasonicos()` for each sensor and sets `distanceFront/Right/Left/Rear`.
+- Ensures that a returned 0 is converted to `MAX_DISTANCE`.
+
+### servoRight(), servoLeft(), servoCenter()
+- Move the servo to preconfigured angles and wait 15 ms.
+
+### setMotorDirection(bool forward), stopMotor(), MotorSpeed(bool direccion, int velocidad)
+- `setMotorDirection` sets DIR pins for forward/backward.
+- `stopMotor` sets both DIR pins LOW and `pinENB` LOW.
+- `MotorSpeed` sets direction and calls `analogWrite(pinENB, velocidad)` to control speed.
+  - Note: `analogWrite` is not the standard Arduino API on the ESP32 core — LEDC (ledcSetup/ledcAttachPin/ledcWrite) is recommended.
+
+### EncoderForward(int encoderTicks), EncoderBackward(int encoderTicks)
+- Clear encoder count, then loop while encoder count hasn't reached target, commanding MotorSpeed inside the loop and delaying.
+- After reaching target, call stopMotor() and clear encoder count.
+- These functions are blocking and currently have no timeout safeguards.
+
+---
+
+## 6 — State machine (detailed)
+
+### START
+- Centers servo, sets `sense = 1`, and transitions to `WALL`.
+- Acts as a simple initialization step and chooses a default turning sense (right).
+
+### WALL
+- Moves forward with `MotorSpeed(true, 200)` for 2 seconds, then stops.
+- Based on `sense`:
+  - If `sense == 1`: steer right, reverse for 2 seconds, center servo, `EncoderForward(300)`, go to `SEARCH`.
+  - If `sense == 2`: same but mirrored (left).
+- Purpose: reposition the robot away from a wall and get into a search posture.
+- Note: there is commented code that would choose `sense` based on left vs right distances; currently `sense` is forced in START.
+
+### SEARCH
+- Iterates over `pixy.ccc.numBlocks` and:
+  - If `m_signature == 1` → set state to `GREEN`.
+  - If `m_signature == 2` → set state to `RED`.
+  - Else (inside the for) it calls `MotorSpeed(true, 200)` and delays 200 ms.
+- Issue: If `pixy.ccc.numBlocks == 0`, the for-loop does not run and the robot will not advance. The intended behavior probably is: if no blocks detected, advance; otherwise process blocks. The current placement of MotorSpeed inside the `else` of the for is problematic.
+
+### GREEN
+- Behavior depends on flags `R` and `G`:
+  - If `R == 1`: sequence Left → forward 400, Right → forward 900, Center → forward 100; set `G = 0`, return to `SEARCH`.
+  - If `(G == 0) && (R == 0)`: Left → forward 700, Right → forward 700, Center → forward 100; set `G = 1`, return to `SEARCH`.
+  - Else if `G == 1`: move slowly `MotorSpeed(true, 30)`; if `distanceFront < 20` → set `G = 0`, go to `WALL`.
+- Purpose: first detection triggers a larger exploratory maneuver (marking `G = 1`), subsequent detections switch to slow advance until a frontal obstacle is detected.
+
+### RED
+- Symmetric to GREEN but using the `R` flag:
+  - If `G == 1`: perform a maneuver, clear `G = 0`, return to `SEARCH`.
+  - If `(R == 0) && (G == 0)`: perform a maneuver, set `R = 1`, return to `SEARCH`.
+  - If `R == 1`: move slowly; if `distanceFront < 20` then `R = 0`, transition to `WALL`.
+
+### STOPPED
+- Present in the enum but not used.
+
+---
+
+
+
+---
+
+
 
 # Cost Report
 ## Components
@@ -585,7 +711,7 @@ Use the repo images for reference during assembly:
 - schemes/ use the schemes for cable orientation 
 
 Repository firmware this guide matches:
-- CodigoDeluxe4_0.ino
+- CodigoDeluxe4_1.ino
 
 ---
 
@@ -748,7 +874,7 @@ Assembly Steps
    - Mount motor in motor mount provided; use M3 screws with nuts. Keep motor wire exit toward the side for short routing.
 
 2) Mount wheel hubs and steering module
-   - falta descripción 
+   - Place the inside bearing, then the bar and the gears and the outside bearing, mount the wheels and the use the bottom photo of delta fro better guidance for the steering module
 
 3) Mount motor driver 
    - Place motor driver close to motor to minimize VMOT wiring.
@@ -821,7 +947,7 @@ Power rails
 10 — Software, calibration & commissioning
 
 Firmware
-- Use the provided `CodigoDeluxe4_0.ino`.
+- Use the provided `CodigoDeluxe4_1.ino`.
 - Ensure you uploaded the corrected sketch (ENB on GPIO13).
 
 Note: To upload code from the Arduino IDE to an ESP32, first ensure the ESP32 board package is installed via the Boards Manager within the Arduino IDE.
