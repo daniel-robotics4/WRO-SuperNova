@@ -871,10 +871,10 @@ Preparation (before fastening)
 
 Assembly Steps
 1) Install the motor into bottom chassis
-   - Mount motor in motor mount provided; use M3 screws with nuts. Keep motor wire exit toward the side for short routing.
+   - Mount motor in motor mount provided; use M3 screws with nuts. Keep motor wire exit toward the side for short routing, add the smaller gear into the motor.
 
 2) Mount wheel hubs and steering module
-   - Place the inside bearing, then the bar and the gears and the outside bearing, mount the wheels and the use the bottom photo of delta fro better guidance for the steering module
+   - Place the inside bearing, then the bar and the bigger gear and the outside bearing, mount the wheels and the use the bottom photo of delta fro better guidance for the steering module
 
 3) Mount motor driver 
    - Place motor driver close to motor to minimize VMOT wiring.
@@ -893,7 +893,7 @@ Assembly Steps
 
 7) Mount Pixy2 camera
    - Attach Pixy2 on front bracket; route its cable toward the ESP32 hat area.
-   - the Pixy needs a designated regulator for the 3.3V
+   - the Pixy needs a designated regulator for the 5V
 
 8) Connect encoder wires
    - Route encoder A/B to GPIO4/GPIO5; keep wires short and twisted.
