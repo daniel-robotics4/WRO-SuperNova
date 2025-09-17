@@ -1,8 +1,5 @@
 Video
 ====
 
-Here is the video of DELTA:
-https://youtu.be/pyo142IyCx4?si=Lwm5mD9Nl4Cmv8rq
-
-Here is the video of DELTA showing how the vehicle dodging the obstacles: 
-https://youtube.com/shorts/eCfh8gWQ4tg?si=2pVzXcf9k674hNqk
+This directory must contain the video.md file with a URL to YouTube (should be either public or accessible by link) showing the vehicle driving autonomously.
+That part of the video where driving demonstration exists must be at least 30 seconds in length.
