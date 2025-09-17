@@ -71,6 +71,22 @@ This repository contains the documentation for the SuperNova team's robot for th
   10. [Software, calibration & commissioning](#10--software-calibration--commissioning)
 
 
+## Contents of the repository
+· `t-photos`:Includes 2 photos of the team (one official and one fun with all members). 
+
+`v-photos`: Contains 6 photos of the vehicle (from all angles, top and bottom).  
+
+`video` : Video.md file with link to a driving demonstration video. 
+
+`schemes`: Schematic diagrams (JPEG, PNG or PDF) of the electromechanical components, illustrating the connection of electronic elements and motors. 
+
+`src`: Control software code for all components programmed for the competition.
+
+`models`: Files for models used by 3D printers, laser cutters and CNC machines to produce vehicle elements.
+
+`other`: Additional files to understand how to prepare the vehicle for competition (SBC/SBM connection documentation, file upload, hardware specifications, etc.), old code and the images on the repository.
+
+
 the Project
 ===
 Our project consists of creating an automated land vehicle capable of navigating an environment marked by colored obstacles. the vehicle takes different paths depending on the color of the obstacle. We use an ESP32-based program (C++) that includes codes for the ultrasonic sensors (hc-sr04), which can detect objects at a predetermined distance. When an obstacle is detected, the sensors send a signal to the ESP32 circuit board, which then directs the vehicle’s movement system to turn det either clockwise or counterclockwise, as pre-established. Additionally, the vehicle is equipped with a camera module (Pixy v2) to detect colored obstacles and avoid them based on their color
